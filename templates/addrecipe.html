@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Add Recipe url_for('insert_recipe')</h3>
+<div class="row">
+   <form class="col s12" action="" method="POST">
+      <div class="row">
+         <ul class="collapsible" data-collapsible="accordion">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Details</div>
+            <div class="collapsible-body">
+               <span>
+                  <i class="material-icons prefix">assignment</i>
+                  <select id="category" name="category_name">
+                  <option value="" disabled selected>Choose Cuisine</option>
+                  {% for cat in categories %}
+                  <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                  {% endfor %}
+                  </select>
+                  <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate">
+                  <input id="author" name="author" placeholder="Author" type="text" class="validate">
+                  <input id="country" name="country" placeholder="Country of author" type="text" class="validate">
+               </span>
+            </div>
+           </li>
+           <li>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Ingredients</div>
+            <div class="collapsible-body">
+               <span>
+                  <div class="row">
+                     <div class="input-field col s12">
+                        <div class="col s8 ingredient">
+                           <input name="ingredient" placeholder="Ingredient" 
+                              type="text" class="validate">
+                        </div>
+                        <div class="col s1 quantity">
+                           <input  name="quantity" placeholder="Quantity" 
+                              type="text" class="validate">
+                        </div>
+                        <div class="col s3 measure">
+                           <input name="measure" placeholder="Measure" 
+                              type="text" class="validate">
+                        </div>
+                       
+                     </div>
+                  </div>
+               </span>
+            </div>
+           </li>
+           <li>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Instructions</div>
+            <div class="collapsible-body">
+               <span>
+                  <div class="row">
+                     <div class="input-field col s12">
+                        <i class="material-icons prefix">subject</i>
+                        <textarea id="task_description" name="task_description" class="materialize-textarea"></textarea>
+                     </div>
+                  </div>
+               </span>
+            </div>
+           </li>
+      </ul>    
+      <div class="row">
+         <button class="btn waves-effect waves-light" type="submit" name="action">Add Recipe
+             <i class="material-icons right">send</i>
+         </button>
+      </div>
+   </form>
+</div>
+
+{% endblock %}
