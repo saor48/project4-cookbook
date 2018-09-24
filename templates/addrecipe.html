@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>Add Recipe url_for('insert_recipe')</h3>
+<h3>Add Recipe </h3>
 <div class="row">
-   <form class="col s12" action="" method="POST">
+   <form class="col s12" action="{{url_for('insert_recipe')}}" method="POST">
       <div class="row">
          <ul class="collapsible" data-collapsible="accordion">
           <li>
@@ -11,10 +11,10 @@
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="category_name">
+                  <select id="cuisine" name="cuisine">
                   <option value="" disabled selected>Choose Cuisine</option>
-                  {% for cat in categories %}
-                  <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                  {% for cuisine in cuisines %}
+                  <option value="{{cuisine}}">{{cuisine}}</option>
                   {% endfor %}
                   </select>
                   <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate">
@@ -29,20 +29,16 @@
                <span>
                   <div class="row">
                      <div class="input-field col s12">
+                        <!--
+                        <input name="ingredient" placeholder="Ingredient" 
+                        type="text" class="validate">
+                        -->
                         <div class="col s8 ingredient">
-                           <input name="ingredient" placeholder="Ingredient" 
-                              type="text" class="validate">
+                           
                         </div>
-                        <div class="col s1 quantity">
-                           <input  name="quantity" placeholder="Quantity" 
-                              type="text" class="validate">
-                        </div>
-                        <div class="col s3 measure">
-                           <input name="measure" placeholder="Measure" 
-                              type="text" class="validate">
-                        </div>
-                       
                      </div>
+                     <button class="btn waves-effect waves-light" type="button" onclick="createInputs(2, 'ingredient')">
+                           Add More<i class="material-icons right">send</i>
                   </div>
                </span>
             </div>
@@ -52,10 +48,12 @@
             <div class="collapsible-body">
                <span>
                   <div class="row">
-                     <div class="input-field col s12">
+                     <div class="input-field col s12 instruction">
                         <i class="material-icons prefix">subject</i>
-                        <textarea id="task_description" name="task_description" class="materialize-textarea"></textarea>
+         
                      </div>
+                     <button class="btn waves-effect waves-light" type="button" onclick="createInputs(1, 'instruction')">
+                           Add Another<i class="material-icons right">send</i>
                   </div>
                </span>
             </div>

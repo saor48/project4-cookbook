@@ -42,26 +42,30 @@
     </script>
     <script type="text/javascript">
         function createInputs(number, clas){
-            for (i=0;i<number;i++){
-                var input = document.createElement("input");
-                input.type = "text";
-                input.name = clas + i;
-                input.placeholder = clas;
-                input.class = "validate";
-                $('.' + clas).append(input);
+            if (clas == "ingredient") {
+                for (i=1;i<=number;i++){
+                    num = i + ing;
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = clas + num;
+                    input.placeholder = clas + num;
+                    input.class = "validate";
+                    $('.' + clas).append(input);
+                }
+                ing = ing + number;
+            }
+            if (clas == "instruction") {
+                    ins = ins + 1;
+                    var el = document.createElement("textarea");
+                    el.name = clas + ins;
+                    el.class = "materialize-textarea";
+                    $('.' + clas).append(el);
             }
         }
-   
-        var number = 3;
-            //var number = document.getElementById("member").value;
-            //<button onclick="createInputs()">Create Inputs</button>
-        clas = "ingredient"
-        createInputs(number, clas);
-        clas = "measure"
-        createInputs(number, clas);
-        clas = "quantity"
-        createInputs(number, clas);
-  
+        var ing = 0;
+        var ins = 0;
+        createInputs(3, "ingredient");
+        createInputs(1, "instruction");
     </script>
 </body>
 </html>

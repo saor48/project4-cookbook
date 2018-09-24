@@ -1,3 +1,8 @@
+searchable- lists
+  recipe-name, author, cuisine, 
+addrecipe - buttons materialise
+
+
 # Cookbook
 An online cookbook where users can post, and vote on recipes.
 Recipes are searchable for parameters of country, cuisine, most popular and author.
