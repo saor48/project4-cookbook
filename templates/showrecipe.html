@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>!This is Dinner!</h3>
+{{recipe}}
+      <div class="row col s12">
+         
+         <ul >
+            {%for cat in recipe %}
+            <li>
+            
+            {{cat}} : {{recipe[cat]}}
+            
+            </li>
+            {%endfor%}
+         </ul>
+      </div> 
+    
+{% endblock %}

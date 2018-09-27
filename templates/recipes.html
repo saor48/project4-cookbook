@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <h3>Recipes</h3>
-  <ul class="collapsible" data-collapsible="accordion">
-    {%for recipe in recipes %}
-    <li>
-      <div class="collapsible-header">
-        <div class="col s1">
-          <i class="material-icons">expand_more</i>
-        </div>
-        <div class="col s2">
-          <a href="{{url_for('edit_recipe', task_id=task._id)}}" class="waves-effect waves-light btn-small green">Edit</a>
-        </div>
-        <div class="task-header col s9">
-          <strong>{{recipe.recipe_name}}</strong> - {{recipe.views}}
-        </div>
+
+{{recipe_names}}
+<div class="row">
+    <form class="col s12" action="{{url_for('show_recipe')}}" method="POST">
+      <div class="row">
+        <ul >
+          <li>
+            <select id="recipe" name="recipe_name">
+              <option value="" disabled selected>Choose a Recipe</option>
+              {%for recipe_name in recipe_names %}
+              <option value="{{recipe_name}}">{{recipe_name}}</option>
+              {%endfor%}
+            </select>
+          </li>
+        </ul>   
       </div>
-      <div class="collapsible-body">
-        <span>{{recipe.description}}</span>
+      <div class="row">
+         <button class="btn waves-effect waves-light" type="submit" >Show this recipe
+             <i class="material-icons right">send</i>
+         </button>
       </div>
-    </li>
-    {%endfor%}
-  </ul>    
-    
+    </form>
+</div>
 {% endblock %}

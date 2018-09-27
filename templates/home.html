@@ -1,66 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<h3>HOMRE Add Recipe url_for('insert_recipe')</h3>
+{{cats}}
+<h3>What's for Dinner!</h3>
 <div class="row">
-   <form class="col s12" action="" method="POST">
+   <form class="col s12" action="{{url_for('get_recipes')}}" method="POST">
       <div class="row">
          <ul class="collapsible" data-collapsible="accordion">
           <li>
-            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Details</div>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>View all Recipes</div>
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="category_name">
-                  <option value="" disabled selected>Choose Cuisine</option>
-                  {% for cat in what %}
+                  <select id="category" name="recipe_name">
+                  <option value="recipe" disabled selected>Choose a Recipe</option>
+                  {% for cat in recipes %}
                   <option value="{{cat}}">{{cat}}</option>
                   {% endfor %}
                   </select>
-                  <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate">
-                  <input id="author" name="author" placeholder="Author" type="text" class="validate">
-                  <input id="country" name="country" placeholder="Country of author" type="text" class="validate">
                </span>
             </div>
            </li>
            <li>
-            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Ingredients</div>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>View recipes by Cuisine</div>
             <div class="collapsible-body">
                <span>
-                  <div class="row">
-                     <div class="input-field col s12">
-                        <div class="col s8 ingredient">
-                          ingredient
-                        </div>
-                        <div class="col s1 quantity">
-                          qutity
-                        </div>
-                        <div class="col s3 measure">
-                           <div class="inner">Hello</div>
-                          measure
-                        </div>
-                       
-                     </div>
-                  </div>
+                  <i class="material-icons prefix">assignment</i>
+                  <select id="category" name="cuisine">
+                  <option value="cuisine" disabled selected>Choose a Cuisine</option>
+                  {% for cat in cats %}
+                  {% for cuisine in cat.cuisine %}
+                  <option value="{{cuisine}}">{{cuisine}}</option>
+                  {% endfor %}
+                  {% endfor %}
+                  </select>
                </span>
             </div>
            </li>
            <li>
-            <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Instructions</div>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>View recipes by Author</div>
             <div class="collapsible-body">
                <span>
-                  <div class="row">
-                     <div class="input-field col s12">
-                        <i class="material-icons prefix">subject</i>
-                        <textarea id="task_description" name="task_description" class="materialize-textarea"></textarea>
-                     </div>
-                  </div>
+                  <i class="material-icons prefix">assignment</i>
+                  <select id="category" name="author">
+                  <option value="author" disabled selected>Choose an Author</option>
+                  {% for cat in cats %}
+                  {% for author in cat.author %}
+                  <option value="{{author}}">{{author}}</option>
+                  {% endfor %}
+                  {% endfor %}
+                  </select>
                </span>
             </div>
            </li>
       </ul>    
       <div class="row">
-         <button class="btn waves-effect waves-light" type="submit" name="action">Add Recipe
+         <button class="btn waves-effect waves-light" type="submit" >Show my recipes
              <i class="material-icons right">send</i>
          </button>
       </div>
