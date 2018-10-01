@@ -1,5 +1,18 @@
 body{
-    background-color: yellow; 
+    background-color: rgb(250, 188, 2); 
+}
+nav{
+    background-color: rgb(208, 234, 43); 
+    color: #fffff0;
+}
+h3{
+    color: #fffff0;
+}
+h4{
+    color: #ffff40;
+}
+.columns{
+    columns: 100px 2;
 }
 .btn-small {
     height: 24px;
@@ -12,5 +25,45 @@ body{
 .task-header{
     margin-top: 5px;
     margin-left: 10%;
+}
+.button {
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+}
+.button1 {border-radius: 50%;
+    background-color: #4CAF50; /* Green */
+    font-size: 16px;
+    padding: 8px;
+}
+.button2 {border-radius: 50px;
+    background-color: blue; /*  */
+    font-size: 12px;
+    padding: 4px;
+}
+nav .logo {
+    margin-left: 50px;
+    font-size: 2em;
+  }
+nav .logo1 {
+    display: none;
+  }
+  
+@media only screen and (min-width: 601px) {
+  nav a.button-collapse {
+    display: none;
+  }
+}
+@media only screen and (max-width: 600px) {
+  nav .logo1 {
+    margin-left: 50px;
+  }
+  nav .logo {
+    font-size: 1em;
+  }
 }
 /* #f44280 */

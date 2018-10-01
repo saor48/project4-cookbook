@@ -52,6 +52,22 @@
                </span>
             </div>
            </li>
+           <li>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>View recipes by Country</div>
+            <div class="collapsible-body">
+               <span>
+                  <i class="material-icons prefix">assignment</i>
+                  <select id="category" name="country">
+                  <option value="country" disabled selected>Choose a Country</option>
+                  {% for cat in cats %}
+                  {% for country in cat.country %}
+                  <option value="{{country}}">{{country}}</option>
+                  {% endfor %}
+                  {% endfor %}
+                  </select>
+               </span>
+            </div>
+           </li>
       </ul>    
       <div class="row">
          <button class="btn waves-effect waves-light" type="submit" >Show my recipes

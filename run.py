@@ -62,10 +62,33 @@ def extract_category(show):
                 showrecipe.append(recipe['recipe_name'])
         elif show[0] == 'author':
             if show[1] == recipe['author']:
-                print("exc==r-na",recipe['recipe_name'])
+                showrecipe.append(recipe['recipe_name'])
+        elif show[0] == 'country':
+            if show[1] == recipe['country']:
                 showrecipe.append(recipe['recipe_name'])
     return showrecipe
-    
+
+def num_steps(recipe):
+    ingreds = []
+    prep = []
+    num_ingredients = 0
+    num_instructions = 0
+    for cat in recipe:
+        if cat == 'ingredients':
+            num_ingredients = len(recipe['ingredients'])
+        if cat == 'instructions':
+            num_instructions = len(recipe['instructions'])
+    steps=(num_ingredients, num_instructions)
+    print("steps======",steps)
+    for cat in range(1,steps[0]+1):
+        print("steps======",str(cat), str(recipe['ingredients'][str(cat)]))
+        item = (str(cat), str(recipe['ingredients'][str(cat)]))
+        ingreds.append(item)
+    for cat in range(1,steps[1]+1):
+        print("steps======",str(cat), recipe['instructions'][str(cat)].encode('utf-8'))
+        item = (str(cat), recipe['instructions'][str(cat)].encode('utf-8').strip())
+        prep.append(item)
+    return (ingreds, prep)
 #======================Views x 5=======================================================# 
 # add_recipe() --------- Form to submit new recipe
 # insert_recipe()------- Put new recipe in db collections= recipes and categories
@@ -119,7 +142,8 @@ def get_recipes():
         if 'recipe_name' in cat:
             show = ('recipe_name', form['recipe_name'])
             recipe=extract_recipe(show)
-            return render_template('showrecipe.html', recipe=recipe)
+            steps=num_steps(recipe)
+            return render_template('showrecipe.html', recipe=recipe, steps=steps)
         elif 'cuisine' in cat:
             show = ('cuisine', form['cuisine'])
             byCategory=extract_category(show)
@@ -128,6 +152,10 @@ def get_recipes():
             show = ('author', form['author'])
             byCategory=extract_category(show)
             print("byAuthor", byCategory)
+        elif 'country' in cat:
+            show = ('country', form['country'])
+            byCategory=extract_category(show)
+            print("byCountry", byCategory)
         else:
             show = 'blnk'
     print("show", show)
@@ -141,11 +169,13 @@ def show_recipe():
     form = request.form.to_dict()
     # change from flat to nested json
     cats= [category for category in form]
+    steps = ()
     for cat in cats:
         print("sr-cat", cat)
         show = ('recipe_name', form['recipe_name'])
         recipe=extract_recipe(show)
-    return render_template('showrecipe.html', recipe=recipe)
+        steps = num_steps(recipe)
+    return render_template('showrecipe.html', recipe=recipe, steps=steps)
     
 
 @app.route('/insert_recipe', methods=['POST'])

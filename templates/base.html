@@ -9,9 +9,10 @@
     <header>
         <nav class="nav-extended">
             <div class="nav-wrapper">
-              <a href="{{url_for('home')}}" class="brand-logo center">Searchable Cookbook</a>
+              <a href="{{url_for('home')}}" class="logo">Searchable Cookbook</a>
+              <a href="{{url_for('home')}}" class="logo1">Cookbook</a>
               <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <ul id="nav-mobile" class="right hide-on-small-and-down">
                 <li><a href="{{url_for('home')}}">Home</a></li>
                 <li><a href="{{url_for('add_recipe')}}">New Recipe</a></li>
                 <li><a href="{{url_for('get_stats')}}">Stats</a></li>
@@ -19,7 +20,7 @@
               <ul class="side-nav" id="mobile-demo">
                 <li><a href="{{url_for('home')}}">Home</a></li>
                 <li><a href="{{url_for('add_recipe')}}">New Recipe</a></li>
-                <li><a href="{{url_for('get_stats')}}">Categories</a></li>
+                <li><a href="{{url_for('get_stats')}}">Stats</a></li>
               </ul>
             </div>
         </nav>
@@ -37,7 +38,7 @@
         $(document).ready(function(){
             $('.collapsible').collapsible();
             $('select').material_select();
-            $('.sidenav-trigger').sidenav();  //NOTA FUNCTION!!!!
+            $('.button-collapse').sideNav();  //NOTA FUNCTION!!!!
         });
     </script>
     <script type="text/javascript">
