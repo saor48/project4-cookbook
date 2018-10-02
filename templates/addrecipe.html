@@ -60,11 +60,39 @@
            </li>
       </ul>    
       <div class="row">
-         <button class="btn waves-effect waves-light" type="submit" name="action">Add Recipe
+         <button class="btn waves-effect waves-light" type="submit">Add Recipe
              <i class="material-icons right">send</i>
          </button>
       </div>
    </form>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+        function createInputs(number, clas){
+            if (clas == "ingredient") {
+                for (i=1;i<=number;i++){
+                    num = i + ing;
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = clas + num;
+                    input.placeholder = clas + num;
+                    input.class = "validate";
+                    $('.' + clas).append(input);
+                }
+                ing = ing + number;
+            }
+            if (clas == "instruction") {
+                    ins = ins + 1;
+                    var el = document.createElement("textarea");
+                    el.name = clas + ins;
+                    el.class = "materialize-textarea";
+                    $('.' + clas).append(el);
+            }
+        }
+        var ing = 0;
+        var ins = 0;
+        createInputs(3, "ingredient");
+        createInputs(1, "instruction");
+        
+</script>
 {% endblock %}

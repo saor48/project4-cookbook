@@ -33,18 +33,19 @@ h4{
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    margin: 4px 2px;
+    margin: 20px;
 }
 .button1 {border-radius: 50%;
     background-color: #4CAF50; /* Green */
     font-size: 16px;
     padding: 8px;
 }
-.button2 {border-radius: 50px;
+.btn-edit {border-radius: 50%;
     background-color: blue; /*  */
-    font-size: 12px;
-    padding: 4px;
+    font-size: 16px;
+    padding: 8px;
 }
+
 nav .logo {
     margin-left: 50px;
     font-size: 2em;

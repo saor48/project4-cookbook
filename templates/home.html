@@ -13,8 +13,8 @@
                   <i class="material-icons prefix">assignment</i>
                   <select id="category" name="recipe_name">
                   <option value="recipe" disabled selected>Choose a Recipe</option>
-                  {% for cat in recipes %}
-                  <option value="{{cat}}">{{cat}}</option>
+                  {% for name in recipes %}
+                  <option value="{{name}}">{{name}}</option>
                   {% endfor %}
                   </select>
                </span>

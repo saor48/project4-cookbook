@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Edit Recipe </h3>
+<div id="steps-ing" class="hide">
+  {{steps[0]}}
+</div>
+<div id="steps-ins" class="hide">
+  {{steps[1]}}
+</div>
+<div class="row">
+  <form class="col s12" action="{{url_for('update_recipe')}}" method="POST">
+    <input value="{{recipe.recipe_name}}" name="recipe_name" type="hidden" class="validate">
+    <div class="row">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">assignment</i>Edit Recipe Ingredients</div>
+            <div class="collapsible-body">
+              <span>
+                <div class="row">
+                  <div class="input-field col s12">
+                        <!--
+                        <input name="ingredient" placeholder="Ingredient" 
+                        type="text" class="validate">
+                        -->
+                        {% for step in ingreds %}
+                        <input value="{{step[1]}}" name="ingredient{{step[0]}}"
+                              class="validate">
+                        
+                        {% endfor %}
+                    <div class="col s8 ingredient">
+                           
+                    </div>
+                  </div>
+                  <button class="btn waves-effect waves-light" type="button" onclick="createInputs(2, 'ingredient')">
+                           Add More<i class="material-icons right">send</i>
+                </div>
+              </span>
+            </div>
+          </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">assignment</i>Edit Recipe Instructions</div>
+            <div class="collapsible-body">
+               <span>
+                  <div class="row">
+                     <div class="input-field col s12 instruction">
+                        <i class="material-icons prefix">subject</i>
+                        {% for step in prep %}
+                        <textarea value="{{step[1].decode('utf-8')}}" name="instruction{{step[0]}}"
+                              class="materialize-textarea">{{step[1].decode('utf-8')}}
+                        </textarea>
+                        {% endfor %}
+                     </div>
+                     <button class="btn waves-effect waves-light" type="button" onclick="createInputs(1, 'instruction')">
+                           Add Another<i class="material-icons right">send</i>
+                  </div>
+               </span>
+            </div>
+           </li>
+      </ul>    
+      <div class="row">
+         <button class="btn waves-effect waves-light" type="submit" >Save Recipe
+             <i class="material-icons right">send</i>
+         </button>
+      </div>
+   </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+        function createInputs(number, clas){
+            if (clas == "ingredient") {
+              var numsteps = parseInt(jQuery("#steps-ing").text());
+              for (i=1;i<=number;i++){
+                    num = i + ing + numsteps;
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = clas + num;
+                    input.placeholder = clas + num;
+                    input.class = "validate";
+                    $('.' + clas).append(input);
+              }
+              ing = ing + number;
+            }
+            if (clas == "instruction") {
+              var numsteps = parseInt(jQuery("#steps-ins").text());
+                  num = numsteps + 1 + ins;
+                  elx = document.createElement("textarea");
+                  elx.name = clas + num;
+                  elx.class = "materialize-textarea";
+                  $('.' + clas).append(elx);
+                  //  $('.' + clas + '> p:eq(0)').append('======t===');
+                  ins = ins + 1;
+           }
+        }
+        var ing = 0;
+        var ins = 0;
+        var value="";
+        createInputs(3, "ingredient");
+        createInputs(1, "instruction");
+        
+</script>
+{% endblock %}

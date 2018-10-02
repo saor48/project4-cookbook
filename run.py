@@ -7,7 +7,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-import search
+
 
 app = Flask(__name__)
 app.config['MONGO_DATABASE'] ='mongo ds111623.mlab.com:11623/cookbook'
@@ -15,7 +15,13 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 
 mongo = PyMongo(app)
 
-#==================Functions x 3=============================================#
+#==================Functions x 5=============================================#
+# extract_num(name, letter)  ------ get the number from eg ingredient5
+# category_check(category, item) -- is item already in db-categories?
+# extract_recipe(show) ------------ get the full recipe from db
+# extract_category(show)----------- get all recipe names for specified category
+# num_steps(recipe) --------------- find number of fields for ingredients/instructions
+#    ""  return (ingreds, prep)          and return fields as lists
 
 def extract_num(name, letter):
     if name[-2] == letter:
@@ -79,27 +85,22 @@ def num_steps(recipe):
         if cat == 'instructions':
             num_instructions = len(recipe['instructions'])
     steps=(num_ingredients, num_instructions)
-    print("steps======",steps)
     for cat in range(1,steps[0]+1):
-        print("steps======",str(cat), str(recipe['ingredients'][str(cat)]))
         item = (str(cat), str(recipe['ingredients'][str(cat)]))
         ingreds.append(item)
     for cat in range(1,steps[1]+1):
-        print("steps======",str(cat), recipe['instructions'][str(cat)].encode('utf-8'))
         item = (str(cat), recipe['instructions'][str(cat)].encode('utf-8').strip())
         prep.append(item)
-    return (ingreds, prep)
+    return (ingreds, prep, steps)
+    
 #======================Views x 5=======================================================# 
 # add_recipe() --------- Form to submit new recipe
 # insert_recipe()------- Put new recipe in db collections= recipes and categories
 # home()---------------- Form to select recipes to view by category
+# def edit_recipe() -- to do == edit button on show recipe
 # get_stats()
 # get_recipes()--------- Get recipes for chosen category
 # show_recipe()--------- Display the recipe
-## get-recipes works with extract 1 recipe, cuisines
-### now do for authors, popular
-## showrecipe.html for full recipe display- improve display
-
 
 @app.route('/add_recipe')
 def add_recipe():
@@ -113,17 +114,27 @@ def add_recipe():
 @app.route('/home')
 def home():
     #get recipe names
-    categories = mongo.db.recipes.find()
-    cats= [category for category in categories]
-    recipes=[]
+    recipes = mongo.db.recipes.find()
+    cats= [category for category in recipes]
+    recipeNames=[]
     for cat in cats:
-        recipes.append(cat['recipe_name'])
-        recipes=recipes
+        recipeNames.append(cat['recipe_name'])
     #get categories   
     categories = mongo.db.categories.find()
     cats= [category for category in categories]
-    return render_template('home.html', recipes=recipes, cats=cats)
-    
+    return render_template('home.html', recipes=recipeNames, cats=cats)
+
+@app.route('/edit_recipe', methods=['POST'])  # do == edit button on show recipe--------------
+def edit_recipe():
+    print("edit==", request.form['recipe'])
+    show = ('recipe_name', request.form['recipe'])
+    showrecipe = extract_recipe(show)
+    lists= num_steps(showrecipe)
+    ingreds = lists[0]
+    prep = lists[1]
+    steps = lists[2]
+    return render_template('editrecipe.html', recipe=showrecipe, prep=prep, ingreds=ingreds, steps=steps)
+   
 @app.route('/get_stats')
 def get_stats():
     stats = "stats"
@@ -167,17 +178,15 @@ def get_recipes():
 def show_recipe():
     print("sr==", request.form)
     form = request.form.to_dict()
-    # change from flat to nested json
     cats= [category for category in form]
     steps = ()
     for cat in cats:
         print("sr-cat", cat)
         show = ('recipe_name', form['recipe_name'])
-        recipe=extract_recipe(show)
+        recipe = extract_recipe(show)
         steps = num_steps(recipe)
     return render_template('showrecipe.html', recipe=recipe, steps=steps)
     
-
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
     form = request.form.to_dict()
@@ -214,6 +223,36 @@ def insert_recipe():
                     } 
             )
     return redirect(url_for("add_recipe"))    
+
+@app.route('/update_recipe', methods=['POST'])
+def update_recipe():
+    form = request.form.to_dict()
+    print("updateform==", form)
+    # change from flat to nested json
+    cats= [category for category in form]
+    ingredients = {}
+    instructions = {}
+    for cat in cats:
+        if "ingredient" in cat:
+            i = extract_num(cat, 't')
+            if form[cat] != "":
+                ingredients[i] = form[cat]
+            del form[cat]
+        if "instruction" in cat:
+            i = extract_num(cat, 'n')
+            if form[cat] != "":
+                instructions[i] = form[cat]
+            del form[cat]    
+    form['ingredients'] = ingredients
+    form['instructions'] = instructions
+    #del form['action']
+    print(form)
+    #insert in recipes
+    recipes = mongo.db.recipes
+    
+    recipes.update( {'recipe_name' : form['recipe_name']}, form)
+   
+    return redirect(url_for("add_recipe")) 
     
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'), port=os.environ.get('PORT'), debug=True)
