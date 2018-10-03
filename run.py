@@ -101,7 +101,7 @@ def num_steps(recipe):
 # insert_recipe()------- Put new recipe in db collections---------------->addrecipe
 # edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
 # update_recipe() ------ Update recipe in db collection------------------>home
-# vote()
+# vote()---------------- Add 1 to chosen recipe votes  ------------------>home
 # get_stats()
 
 
@@ -127,8 +127,18 @@ def home():
     cats= [category for category in categories]
     return render_template('home.html', recipes=recipeNames, cats=cats)
 
-@app.route('/vote', methods=['POST'])  # do == vote button on show recipe--------------
+@app.route('/vote', methods=['POST'])  
 def vote():
+    print("edit==", request.form['recipe'])
+    recipe_name = request.form['recipe']
+    vote = request.form['vote']
+    show = ('recipe_name', recipe_name)
+    recipe = extract_recipe(show)
+    for category in recipe:
+        if category == "votes":
+            recipe['votes'] = str(int(recipe['votes']) + 1)
+            recipes=mongo.db.recipes
+            recipes.update( {'recipe_name' : recipe_name }, recipe)
     return redirect(url_for("home"))
 
 @app.route('/edit_recipe', methods=['POST'])  # do == vote button on show recipe--------------
@@ -177,8 +187,8 @@ def get_recipes():
         else:
             show = 'blnk'
     print("show", show)
-    recipes=mongo.db.recipes.find()
-    categories=mongo.db.categories.find()
+    #recipes=mongo.db.recipes.find()
+    #categories=mongo.db.categories.find()
     return render_template('recipes.html', recipe_names=byCategory)
 
 @app.route('/show_recipe', methods=['POST'])

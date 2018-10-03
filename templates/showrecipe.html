@@ -8,6 +8,7 @@
       <div class="col s2">
          <form  action="{{url_for('vote')}}" method="POST">
          <input value="{{recipe['recipe_name']}}" name="recipe"  type="hidden">
+         <input value="vote" name="vote"  type="hidden">
          <button class="button button1">Vote</button>
          </form>
       </div>
