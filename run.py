@@ -21,7 +21,7 @@ mongo = PyMongo(app)
 # extract_recipe(show) ------------ get the full recipe from db
 # extract_category(show)----------- get all recipe names for specified category
 # num_steps(recipe) --------------- find number of fields for ingredients/instructions
-#    ""  return (ingreds, prep)          and return fields as lists
+#    ""  return (ingreds, prep, steps)          and return fields as lists
 
 def extract_num(name, letter):
     if name[-2] == letter:
@@ -93,14 +93,17 @@ def num_steps(recipe):
         prep.append(item)
     return (ingreds, prep, steps)
     
-#======================Views x 5=======================================================# 
-# add_recipe() --------- Form to submit new recipe
-# insert_recipe()------- Put new recipe in db collections= recipes and categories
-# home()---------------- Form to select recipes to view by category
-# def edit_recipe() -- to do == edit button on show recipe
+#======================Views x 6=======================================================# 
+# home()---------------- Form to select recipes to view by category------>home
+# get_recipes()--------- Get recipes for chosen category----------------->recipes
+# show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
+# add_recipe() --------- Form to submit new recipe----------------------->addrecipe
+# insert_recipe()------- Put new recipe in db collections---------------->addrecipe
+# edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
+# update_recipe() ------ Update recipe in db collection------------------>home
+# vote()
 # get_stats()
-# get_recipes()--------- Get recipes for chosen category
-# show_recipe()--------- Display the recipe
+
 
 @app.route('/add_recipe')
 def add_recipe():
@@ -124,7 +127,11 @@ def home():
     cats= [category for category in categories]
     return render_template('home.html', recipes=recipeNames, cats=cats)
 
-@app.route('/edit_recipe', methods=['POST'])  # do == edit button on show recipe--------------
+@app.route('/vote', methods=['POST'])  # do == vote button on show recipe--------------
+def vote():
+    return redirect(url_for("home"))
+
+@app.route('/edit_recipe', methods=['POST'])  # do == vote button on show recipe--------------
 def edit_recipe():
     print("edit==", request.form['recipe'])
     show = ('recipe_name', request.form['recipe'])
@@ -248,11 +255,18 @@ def update_recipe():
     #del form['action']
     print(form)
     #insert in recipes
+    show = ('recipe_name', form['recipe_name'])
+    recipe = extract_recipe(show)
+    print("update--recipe", recipe)
+    form['cuisine'] = recipe['cuisine']
+    form['country'] = recipe['country']
+    form['author'] = recipe['author']
+    form['votes'] = recipe['votes']
+    print("update--form", form)
     recipes = mongo.db.recipes
-    
     recipes.update( {'recipe_name' : form['recipe_name']}, form)
    
-    return redirect(url_for("add_recipe")) 
+    return redirect(url_for("home")) 
     
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'), port=os.environ.get('PORT'), debug=True)
