@@ -1,6 +1,6 @@
 # done - add recipe=insert and categories=update
 #next - home = select by cuisine. author. all, ---popular
-# add vote buttom and count views to recipe page
+#  count views to recipe page
 # add dc/d3 popular.top3 votes/views average-votes recipes-with-ingredient
 
 import os
@@ -15,13 +15,14 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 
 mongo = PyMongo(app)
 
-#==================Functions x 5=============================================#
+#==================Functions x 6=============================================#
 # extract_num(name, letter)  ------ get the number from eg ingredient5
 # category_check(category, item) -- is item already in db-categories?
 # extract_recipe(show) ------------ get the full recipe from db
 # extract_category(show)----------- get all recipe names for specified category
 # num_steps(recipe) --------------- find number of fields for ingredients/instructions
 #    ""  return (ingreds, prep, steps)          and return fields as lists
+# view_count(recipe) -------------- increment views field
 
 def extract_num(name, letter):
     if name[-2] == letter:
@@ -92,8 +93,16 @@ def num_steps(recipe):
         item = (str(cat), recipe['instructions'][str(cat)].encode('utf-8').strip())
         prep.append(item)
     return (ingreds, prep, steps)
-    
-#======================Views x 6=======================================================# 
+
+def view_count(recipe):
+    for category in recipe:             #########################needed?????????
+        if category == "views":
+            recipe['views'] = str(int(recipe['views']) + 1)
+            recipes=mongo.db.recipes
+            recipes.update( {'recipe_name' : recipe['recipe_name'] }, recipe)
+            print("viewcount==", recipe)
+   
+#======================Views x 8=======================================================# 
 # home()---------------- Form to select recipes to view by category------>home
 # get_recipes()--------- Get recipes for chosen category----------------->recipes
 # show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
@@ -141,7 +150,7 @@ def vote():
             recipes.update( {'recipe_name' : recipe_name }, recipe)
     return redirect(url_for("home"))
 
-@app.route('/edit_recipe', methods=['POST'])  # do == vote button on show recipe--------------
+@app.route('/edit_recipe', methods=['POST']) 
 def edit_recipe():
     print("edit==", request.form['recipe'])
     show = ('recipe_name', request.form['recipe'])
@@ -171,7 +180,8 @@ def get_recipes():
             show = ('recipe_name', form['recipe_name'])
             recipe=extract_recipe(show)
             steps=num_steps(recipe)
-            return render_template('showrecipe.html', recipe=recipe, steps=steps)
+            view_count(recipe)                                                  #####redirect?
+            return render_template('showrecipe.html', recipe=recipe, steps=steps)####this
         elif 'cuisine' in cat:
             show = ('cuisine', form['cuisine'])
             byCategory=extract_category(show)
@@ -202,6 +212,7 @@ def show_recipe():
         show = ('recipe_name', form['recipe_name'])
         recipe = extract_recipe(show)
         steps = num_steps(recipe)
+    view_count(recipe)
     return render_template('showrecipe.html', recipe=recipe, steps=steps)
     
 @app.route('/insert_recipe', methods=['POST'])
