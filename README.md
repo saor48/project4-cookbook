@@ -2,22 +2,16 @@ searchable- lists
   recipe-name, author, cuisine, 
 addrecipe - buttons materialise
 
+[ ..not yet ..]
+# Cookbook  
+An online cookbook where users can post and vote on recipes.
 
-# Cookbook
-An online cookbook where users can post, and vote on recipes.
-Recipes are searchable for parameters of country, cuisine, most popular and author.
-Users can also edit their own recipes using their password.
+Recipes are searchable for parameters of country, cuisine, [most popular] and author.
+Users can also edit their own recipes using their [password].
 
 ## UX
- 
-Use this section to provide insight into your UX process, focusing on who this website is for, what it is that they want to achieve and how your project is the best way to help them achieve these things.
-
-In particular, as part of this section we recommend that you provide a list of User Stories, with the following general structure:
-- As a user type, I want to perform an action, so that I can achieve a goal.
-
-This section is also where you would share links to any wireframes, mockups, diagrams etc. that you created as part of the design process. These files should themselves either be included in the project itself (in an separate directory), or just hosted elsewhere online and can be in any format that is viewable inside the browser.
-----------------------
-The App allows users to provide a recipe that will be searchable.
+This App provides users with an easily searchable database of recipes. 
+The App allows also users to provide and edit a recipe.
 As a recipe contains a lot of data, I want to make the input form easy to use.
 The input is broken into three sections; recipe details, ingredients and preparation.
 The form is accordion style to be easy to use and less daunting.
@@ -25,34 +19,50 @@ A button provides additional input fields as required.
 
 ## Features
 
-In this section, you should go over the different parts of your project, and describe each in a sentence or so.
---------------
-#Input Form
+# Input Form
 - Easy to use accordion style form with button for additional input fields
 
-#Home 
-- Select recipe from categories
+# Home 
+- Choose a category then sub-category to view recipe names.
 
-Stats
+# Recipes.html
+- Display the recipe names in the selected categories and allow user to choose one.
+
+# Showrecipe.html
+- Display the chosen recipe. Page has buttons to vote and edit.
+
+# Stats
 - Analyse the various categories with d3/dc graphs
 
 ### Existing Features
-- Feature 1 - allows users X to achieve Y, by having them fill out Z
-- ...
-
-For some/all of your features, you may choose to reference the specific project files that implement them, although this is entirely optional.
-
-In addition, you may also use this section to discuss plans for additional features to be implemented in the future:
+- Searchability - Homepage allows user to choose a category by which to search for recipes
+- Accordion style input form - enables user to focus on one part at a time.
+- Adaptable input form - create-more-inputs button allows user to add more input lines as needed. 
+- Vote and edit buttons - allow user to take action directly from the recipe page.
 
 ### Features Left to Implement
-- Another feature idea
+- Allergens / Vegan etc info
+- user signin
+- 
 
 ## Technologies Used
 
-In this section, you should mention all of the languages, frameworks, libraries, and any other tools that you have used to construct this project. For each, provide its name, a link to its official site and a short sentence of why it was used.
-
+ all of the languages, frameworks, libraries, tools 
+- [Python 3] ( https://www.python.org/ )
+    - This project is python driven.
+- [Materialize 0.100.2] ( https://materializecss.com/ )
+   - The styling framework
 - [JQuery](https://jquery.com)
     - The project uses **JQuery** to simplify DOM manipulation.
+- [d3] (https://d3js.org/) . 
+    - Used indirectly through dc.
+- [crossfilter] (http://square.github.io/crossfilter/)
+    - Prepares the data for dc
+- [dc] (https://cdnjs.com/libraries/dc)
+    - Used to draw the graphs on the stats page
+- [queue] (https://cdnjs.com/libraries/queue-async). 
+    - Loads data from stored files for dc use.
+ 
 
 
 ## Testing
@@ -93,9 +103,5 @@ In addition, if it is not obvious, you should also describe how to run your code
 Recipes were obtained from:
 - https://www.tasteofhome.com
 
-### Media
-- The photos used in this site were obtained from ...
-
-### Acknowledgements
-
-- I received inspiration for this project from X
+Color palette inspired by:
+- https://en.wikipedia.org/wiki/File:Color_star-en.svg

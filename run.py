@@ -1,6 +1,4 @@
-# done - add recipe=insert and categories=update
-#next - home = select by cuisine. author. all, ---popular
-#  count views to recipe page
+#next - home = select by  ---popular
 # add dc/d3 popular.top3 votes/views average-votes recipes-with-ingredient
 
 import os
@@ -8,14 +6,13 @@ from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
-
 app = Flask(__name__)
 app.config['MONGO_DATABASE'] ='mongo ds111623.mlab.com:11623/cookbook'
 app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cookbook'
 
 mongo = PyMongo(app)
 
-#==================Functions x 6=============================================#
+#==================Functions x 7=============================================#
 # extract_num(name, letter)  ------ get the number from eg ingredient5
 # category_check(category, item) -- is item already in db-categories?
 # extract_recipe(show) ------------ get the full recipe from db
@@ -23,6 +20,24 @@ mongo = PyMongo(app)
 # num_steps(recipe) --------------- find number of fields for ingredients/instructions
 #    ""  return (ingreds, prep, steps)          and return fields as lists
 # view_count(recipe) -------------- increment views field
+# meal_type(recipe) --------------- check ingredients for meat and dairy
+
+def meal_type(recipe):
+    meat = ['beef', 'chicken', 'lamb', 'pork', 'mutton', 'venison', 'veal']
+    dairy = ['milk', 'cheese', 'yogurt', 'egg']
+    # set value vegan, veg, if ingredient in lists.
+    allergens = [] #if user signin check recipe against user allergens stored in db 
+                ####### above not yet implemented==========
+    ingreds = recipe['ingredients']
+    meal = 'vegan'
+    for item in ingreds:
+        for d in dairy:
+            if d in ingreds[item]:
+                meal = 'vegetarian'
+        for m in meat:
+            if m in ingreds[item]:
+                meal = 'meat'
+    return meal
 
 def extract_num(name, letter):
     if name[-2] == letter:
@@ -36,8 +51,6 @@ def category_check(category, item):
     cats= [cat for cat in categories]
     for cat in cats:
         items = cat[category]
-        print("ck=1=", cats)
-        print("ck=2=", cat)
         if item not in items:
             items.append(item)
             print("ck=3i=", items)
@@ -47,7 +60,6 @@ def extract_recipe(show):
     recipe_name = show[1]
     recipes=mongo.db.recipes.find()
     cats= [category for category in recipes]
-    print("ex==1-",show)
     showrecipe = ['no dinner']
     for recipe in cats:
         if recipe_name == recipe['recipe_name']:
@@ -62,10 +74,8 @@ def extract_category(show):
     print("exc==show,cats",show, cats)
     showrecipe = ['no dinner']
     for recipe in cats:
-        print("exc==recipe==",recipe)
         if show[0] == 'cuisine':
             if show[1] == recipe['cuisine']:
-                print("exc==r-nc",recipe['recipe_name'])
                 showrecipe.append(recipe['recipe_name'])
         elif show[0] == 'author':
             if show[1] == recipe['author']:
@@ -95,14 +105,12 @@ def num_steps(recipe):
     return (ingreds, prep, steps)
 
 def view_count(recipe):
-    for category in recipe:             #########################needed?????????
-        if category == "views":
             recipe['views'] = str(int(recipe['views']) + 1)
             recipes=mongo.db.recipes
             recipes.update( {'recipe_name' : recipe['recipe_name'] }, recipe)
             print("viewcount==", recipe)
    
-#======================Views x 8=======================================================# 
+#======================Views x 8==========================================page=========# 
 # home()---------------- Form to select recipes to view by category------>home
 # get_recipes()--------- Get recipes for chosen category----------------->recipes
 # show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
@@ -110,9 +118,18 @@ def view_count(recipe):
 # insert_recipe()------- Put new recipe in db collections---------------->addrecipe
 # edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
 # update_recipe() ------ Update recipe in db collection------------------>home
-# vote()---------------- Add 1 to chosen recipe votes  ------------------>home
-# get_stats()
+# vote()---------------- Add 1 vote to chosen recipe   ------------------>home
+# stats() -------------- View charts of cookbook db --------------------->stat
 
+
+@app.route('/stats')
+def stats():
+    pointer=mongo.db.recipes.find()
+    recipes = [category for category in pointer]
+    for recipe in recipes:
+        mealType=meal_type(recipe)
+        print(recipe['recipe_name'], " = ", mealType)
+    return render_template('stat.html')
 
 @app.route('/add_recipe')
 def add_recipe():
@@ -138,16 +155,13 @@ def home():
 
 @app.route('/vote', methods=['POST'])  
 def vote():
-    print("edit==", request.form['recipe'])
     recipe_name = request.form['recipe']
     vote = request.form['vote']
     show = ('recipe_name', recipe_name)
     recipe = extract_recipe(show)
-    for category in recipe:
-        if category == "votes":
-            recipe['votes'] = str(int(recipe['votes']) + 1)
-            recipes=mongo.db.recipes
-            recipes.update( {'recipe_name' : recipe_name }, recipe)
+    recipe['votes'] = str(int(recipe['votes']) + 1)
+    recipes=mongo.db.recipes
+    recipes.update( {'recipe_name' : recipe_name }, recipe)
     return redirect(url_for("home"))
 
 @app.route('/edit_recipe', methods=['POST']) 
@@ -160,11 +174,6 @@ def edit_recipe():
     prep = lists[1]
     steps = lists[2]
     return render_template('editrecipe.html', recipe=showrecipe, prep=prep, ingreds=ingreds, steps=steps)
-   
-@app.route('/get_stats')
-def get_stats():
-    stats = "stats"
-    return render_template('home.html', what=stats)
 
 @app.route('/get_recipes', methods=['POST'])
 def get_recipes():
@@ -250,6 +259,7 @@ def insert_recipe():
                        'country' : countries
                     } 
             )
+    #call stats(recipe)
     return redirect(url_for("add_recipe"))    
 
 @app.route('/update_recipe', methods=['POST'])

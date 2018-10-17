@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static/css/dc.min.css" type="text/css" />
+   
+    <title>TEST Data G60</title>
+    <style type="text/css">
+        #selector {margin: 0;
+                        background-color: #ffee70;
+                        min-height: 50px; }
+        h6, #blurb, #pie {font-family: "Roboto", sans-serif;
+                          font-weight: 500;
+                          font-size: 15px; }
+        #pie { position: relative;
+                top: 230px;
+                left:20px; }
+        #blurb { width: 90%; }
+        span { font-weight: 600; }
+    </style>
+</head>
+<body>
+    
+    <div class="col s12">
+        <h6>Regions: A=Asia, D=Aus, E=Europe, F=Africa, U=Am</h6>
+        <h6>Select by population size in millons; Small<15, Medium 15-50, Large>50</h6>
+    </div>
+    <div class="row">
+        <div class="col s4">    
+            <div id="selector" class="dropdown">  
+            </div>
+        </div>
+    
+        <div class="col s3">  
+            <div id="gdpie">
+                <span id="pie">Hover : Number of countries</span> 
+            </div>
+        </div>
+        
+        <div class="col s4"> 
+            <div id="average-gdppc"> 
+            </div>
+        </div>
+    </div> 
+    
+    <script type="text/javascript" src="static/js/d3.min.js"></script>
+    <script type="text/javascript" src="static/js/crossfilter.min.js"></script>
+    <script type="text/javascript" src="static/js/dc.min.js"></script>
+    <script type="text/javascript" src="static/js/queue.min.js"></script>
+    <script type="text/javascript" src="static/js/graph.js"></script>
+    
+</body>
+{% endblock %}

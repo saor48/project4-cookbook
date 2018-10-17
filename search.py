@@ -1,6 +1,4 @@
-# categories fields
-# cuisine, country, author, popular
-# cuisine{name, count}
+
 
 def insert(searchable):
     cuisine = []
@@ -8,7 +6,7 @@ def insert(searchable):
     country = []
     popular = []
     
-    categories = mongo.db.categories
+    categories = [1][2] # mongo.db.categories
     
     if len(categories) > 0:
         cuisine = categories['cuisine']
