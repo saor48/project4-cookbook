@@ -11,6 +11,10 @@ h3{
 h4{
     color: #ffff40;    /*  creamed yellow */
 }
+::placeholder {
+    color: red;
+    opacity: 1; /* Firefox */
+}
 .columns{
     columns: 100px 2;
 }
@@ -53,7 +57,13 @@ nav .logo {
 nav .logo1 {
     display: none;
   }
-  
+
+#legend {
+    position: relative;
+    color: gray;
+    font-size: larger;
+    left: 100px;
+}  
 @media only screen and (min-width: 601px) {
   nav .button-collapse {
     display: none;

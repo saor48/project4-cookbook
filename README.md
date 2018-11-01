@@ -1,7 +1,8 @@
-searchable- lists
-  recipe-name, author, cuisine, 
-addrecipe - buttons materialise
-
+error when searching by recipe -KeyError: 'views'-recipe['views'] = str(int(recipe['views']) + 1)
+                                              cuisine- if show[1] == recipe['cuisine']:
+            == no default values
+                                              
+                                              
 [ ..not yet ..]
 # Cookbook  
 An online cookbook where users can post and vote on recipes.
@@ -55,13 +56,9 @@ A button provides additional input fields as required.
 - [JQuery](https://jquery.com)
     - The project uses **JQuery** to simplify DOM manipulation.
 - [d3] (https://d3js.org/) . 
-    - Used indirectly through dc.
-- [crossfilter] (http://square.github.io/crossfilter/)
-    - Prepares the data for dc
-- [dc] (https://cdnjs.com/libraries/dc)
-    - Used to draw the graphs on the stats page
+    - Used to draw the graphs on the visualize page
 - [queue] (https://cdnjs.com/libraries/queue-async). 
-    - Loads data from stored files for dc use.
+    - Loads data from stored file for d3 use.
  
 
 

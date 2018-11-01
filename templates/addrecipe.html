@@ -10,6 +10,7 @@
             <div class="collapsible-header"><i class="material-icons">assignment</i>Recipe Details</div>
             <div class="collapsible-body">
                <span>
+                   
                   <i class="material-icons prefix">assignment</i>
                   <select id="cuisine" name="cuisine">
                   <option value="" disabled selected>Choose Cuisine</option>
@@ -17,9 +18,10 @@
                   <option value="{{cuisine}}">{{cuisine}}</option>
                   {% endfor %}
                   </select>
+                  
                   <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate">
-                  <input value="author" name="author" placeholder="Author" type="text" class="validate">
-                  <input value="country" name="country" placeholder="Country of author" type="text" class="validate">
+                  <input name="author" placeholder="Author" type="text" class="validate">
+                  <input name="country" placeholder="Country of author" type="text" class="validate">
                </span>
             </div>
            </li>
@@ -67,7 +69,7 @@
    </form>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
+<script>
         function createInputs(number, clas){
             if (clas == "ingredient") {
                 for (i=1;i<=number;i++){

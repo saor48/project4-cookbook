@@ -1,10 +1,9 @@
-#next - home = select by  ---popular
-# add dc/d3 popular.top3 votes/views average-votes recipes-with-ingredient
-
+# nodinner select error
 import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import csv, json
 
 app = Flask(__name__)
 app.config['MONGO_DATABASE'] ='mongo ds111623.mlab.com:11623/cookbook'
@@ -12,31 +11,40 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 
 mongo = PyMongo(app)
 
-#==================Functions x 7=============================================#
-# extract_num(name, letter)  ------ get the number from eg ingredient5
-# category_check(category, item) -- is item already in db-categories?
-# extract_recipe(show) ------------ get the full recipe from db
-# extract_category(show)----------- get all recipe names for specified category
-# num_steps(recipe) --------------- find number of fields for ingredients/instructions
-#    ""  return (ingreds, prep, steps)          and return fields as lists
-# view_count(recipe) -------------- increment views field
-# meal_type(recipe) --------------- check ingredients for meat and dairy
+#line=================Functions x 7=============================================#
+#47 extract_num(name, letter)  ------ get the number from eg ingredient5
+#54 category_check(category, item) -- is item already in db-categories?
+#64 extract_recipe(show) ------------ get the full recipe from db
+#76 extract_category(show)----------- get all recipe names for specified category
+#93 num_steps(recipe) --------------- find number of fields for ingredients/instructions
+#    ..  return (ingreds, prep, steps)          and return fields as lists
+#112 view_count(recipe) -------------- increment views field
+#26 meal_type(recipe) --------------- check ingredients for meat and dairy
 
 def meal_type(recipe):
-    meat = ['beef', 'chicken', 'lamb', 'pork', 'mutton', 'venison', 'veal']
+    meat = ['beef', 'chicken', 'lamb', 'pork', 'mutton', 'venison', 'veal', 'turkey']
     dairy = ['milk', 'cheese', 'yogurt', 'egg']
+    fish = ['fish', 'salmon']
     # set value vegan, veg, if ingredient in lists.
     allergens = [] #if user signin check recipe against user allergens stored in db 
                 ####### above not yet implemented==========
     ingreds = recipe['ingredients']
     meal = 'vegan'
-    for item in ingreds:
-        for d in dairy:
+    for d in dairy:
+        for item in ingreds:
             if d in ingreds[item]:
                 meal = 'vegetarian'
-        for m in meat:
+                print("mealtyped",item)
+    for m in meat:
+        for item in ingreds:
             if m in ingreds[item]:
                 meal = 'meat'
+                print("mealtypem",item)
+    for f in fish:
+        for item in ingreds:
+            if f in ingreds[item]:
+                meal = 'fish'
+    
     return meal
 
 def extract_num(name, letter):
@@ -63,7 +71,7 @@ def extract_recipe(show):
     showrecipe = ['no dinner']
     for recipe in cats:
         if recipe_name == recipe['recipe_name']:
-            print("ex==rs",recipe)
+            # print("ex==rs",recipe)
             showrecipe = recipe
             return showrecipe
     return showrecipe
@@ -72,18 +80,18 @@ def extract_category(show):
     recipes=mongo.db.recipes.find()
     cats= [category for category in recipes]
     print("exc==show,cats",show, cats)
-    showrecipe = ['no dinner']
+    showrecipes = ['no dinner']
     for recipe in cats:
         if show[0] == 'cuisine':
             if show[1] == recipe['cuisine']:
-                showrecipe.append(recipe['recipe_name'])
+                showrecipes.append(recipe['recipe_name'])
         elif show[0] == 'author':
             if show[1] == recipe['author']:
-                showrecipe.append(recipe['recipe_name'])
+                showrecipes.append(recipe['recipe_name'])
         elif show[0] == 'country':
             if show[1] == recipe['country']:
-                showrecipe.append(recipe['recipe_name'])
-    return showrecipe
+                showrecipes.append(recipe['recipe_name'])
+    return showrecipes
 
 def num_steps(recipe):
     ingreds = []
@@ -108,28 +116,36 @@ def view_count(recipe):
             recipe['views'] = str(int(recipe['views']) + 1)
             recipes=mongo.db.recipes
             recipes.update( {'recipe_name' : recipe['recipe_name'] }, recipe)
-            print("viewcount==", recipe)
    
-#======================Views x 8==========================================page=========# 
-# home()---------------- Form to select recipes to view by category------>home
-# get_recipes()--------- Get recipes for chosen category----------------->recipes
-# show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
-# add_recipe() --------- Form to submit new recipe----------------------->addrecipe
-# insert_recipe()------- Put new recipe in db collections---------------->addrecipe
-# edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
-# update_recipe() ------ Update recipe in db collection------------------>home
-# vote()---------------- Add 1 vote to chosen recipe   ------------------>home
-# stats() -------------- View charts of cookbook db --------------------->stat
+#line======================Views x 9=====================================6 x pages=========# 
+#155 home()---------------- Form to select recipes to view by category------>home
+#190 get_recipes()--------- Get recipes for chosen category----------------->recipes
+#221 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
+#142 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
+#235 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
+#175 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
+#275 update_recipe() ------ Update recipe in db collection------------------>home
+#164 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
+#129 visual() ------------- View charts of cookbook db --------------------->visual
 
 
-@app.route('/stats')
-def stats():
+@app.route('/visual')
+def visual():
     pointer=mongo.db.recipes.find()
     recipes = [category for category in pointer]
-    for recipe in recipes:
-        mealType=meal_type(recipe)
-        print(recipe['recipe_name'], " = ", mealType)
-    return render_template('stat.html')
+   
+    with open("static/data/vav.csv", "w") as vav:
+        heading = "views"+","+"votes"+","+"name"+","+"vegan"
+        vav.writelines(heading+ "\n")
+    with open("static/data/vav.csv", "a") as vav:
+        for recipe in recipes:
+            views = recipe['views']
+            votes = recipe['votes']
+            name = recipe['recipe_name']
+            vegan = recipe['vegan']
+            vav.writelines( views+","+votes+","+name+","+vegan+ "\n")
+                
+    return render_template('visual.html')
 
 @app.route('/add_recipe')
 def add_recipe():
@@ -194,20 +210,16 @@ def get_recipes():
         elif 'cuisine' in cat:
             show = ('cuisine', form['cuisine'])
             byCategory=extract_category(show)
-            print("byCuisine", byCategory)
         elif 'author' in cat:
             show = ('author', form['author'])
             byCategory=extract_category(show)
-            print("byAuthor", byCategory)
         elif 'country' in cat:
             show = ('country', form['country'])
             byCategory=extract_category(show)
-            print("byCountry", byCategory)
         else:
             show = 'blnk'
-    print("show", show)
-    #recipes=mongo.db.recipes.find()
-    #categories=mongo.db.categories.find()
+    print("gr-show", show)
+   
     return render_template('recipes.html', recipe_names=byCategory)
 
 @app.route('/show_recipe', methods=['POST'])
@@ -234,18 +246,21 @@ def insert_recipe():
     for cat in cats:
         if "ingredient" in cat:
             i = extract_num(cat, 't')
-            if form[cat] != "":
+            if form[cat] != "" and form[cat] != cat:     # blank or default
                 ingredients[i] = form[cat]
             del form[cat]
         if "instruction" in cat:
             i = extract_num(cat, 'n')
-            if form[cat] != "":
+            if form[cat] != "" and form[cat] != cat:
                 instructions[i] = form[cat]
             del form[cat]    
     form['ingredients'] = ingredients
     form['instructions'] = instructions
+    form['views'] = "0"
+    form['votes'] = "0"
+    form['vegan'] = meal_type(form)
     #del form['action']
-    print(form)
+    #print(form)
     #insert in recipes
     recipes = mongo.db.recipes
     recipes.insert_one(form)
@@ -265,7 +280,6 @@ def insert_recipe():
 @app.route('/update_recipe', methods=['POST'])
 def update_recipe():
     form = request.form.to_dict()
-    print("updateform==", form)
     # change from flat to nested json
     cats= [category for category in form]
     ingredients = {}
@@ -273,26 +287,26 @@ def update_recipe():
     for cat in cats:
         if "ingredient" in cat:
             i = extract_num(cat, 't')
-            if form[cat] != "":
-                ingredients[i] = form[cat]
+            if form[cat] != "" and form[cat] != cat:
+                ingredients[i] = form[cat].strip()
             del form[cat]
         if "instruction" in cat:
             i = extract_num(cat, 'n')
-            if form[cat] != "":
-                instructions[i] = form[cat]
+            if form[cat] != "" and form[cat] != cat:
+                instructions[i] = form[cat].strip()
             del form[cat]    
     form['ingredients'] = ingredients
     form['instructions'] = instructions
     #del form['action']
-    print(form)
     #insert in recipes
     show = ('recipe_name', form['recipe_name'])
     recipe = extract_recipe(show)
-    print("update--recipe", recipe)
     form['cuisine'] = recipe['cuisine']
     form['country'] = recipe['country']
     form['author'] = recipe['author']
     form['votes'] = recipe['votes']
+    form['views'] = recipe['views']
+    form['vegan'] = meal_type(form)
     print("update--form", form)
     recipes = mongo.db.recipes
     recipes.update( {'recipe_name' : form['recipe_name']}, form)
