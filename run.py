@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-from time import sleep
+#from time import sleep
 import csv, json
 
 app = Flask(__name__)
@@ -12,7 +12,8 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 
 mongo = PyMongo(app)
 
-#line=================Functions x 7=============================================#
+#line=================Functions x 8=============================================#
+#26 meal_type(recipe) --------------- check ingredients for meat and dairy
 #47 extract_num(name, letter)  ------ get the number from eg ingredient5
 #54 category_check(category, item) -- is item already in db-categories?
 #64 extract_recipe(show) ------------ get the full recipe from db
@@ -20,27 +21,24 @@ mongo = PyMongo(app)
 #93 num_steps(recipe) --------------- find number of fields for ingredients/instructions
 #    ..  return (ingreds, prep, steps)          and return fields as lists
 #112 view_count(recipe) -------------- increment views field
-#26 meal_type(recipe) --------------- check ingredients for meat and dairy
+#122 remove_blanks(adict) ------------ remove blank fields from input forms
 
 def meal_type(recipe):
+    # these lists are not complete
     meat = ['beef', 'chicken', 'lamb', 'pork', 'mutton', 'venison', 'veal', 'turkey']
     dairy = ['milk', 'cheese', 'yogurt', 'egg']
     fish = ['fish', 'salmon']
     # set value vegan, veg, if ingredient in lists.
-    allergens = [] #if user signin check recipe against user allergens stored in db 
-                ####### above not yet implemented==========
     ingreds = recipe['ingredients']
     meal = 'vegan'
     for d in dairy:
         for item in ingreds:
             if d in ingreds[item]:
                 meal = 'vegetarian'
-                print("mealtyped",item)
     for m in meat:
         for item in ingreds:
             if m in ingreds[item]:
                 meal = 'meat'
-                print("mealtypem",item)
     for f in fish:
         for item in ingreds:
             if f in ingreds[item]:
@@ -117,17 +115,28 @@ def view_count(recipe):
             recipe['views'] = str(int(recipe['views']) + 1)
             recipes=mongo.db.recipes
             recipes.update( {'recipe_name' : recipe['recipe_name'] }, recipe)
-   
+
+def remove_blanks(adict):
+    blanks = 0
+    newdict = {}
+    for i in range(1,len(adict)+1):
+        if adict[str(i)] != "":
+                index = str(i-blanks)
+                newdict[index] = adict[str(i)]
+        else :
+                blanks += 1
+    return newdict
+    
 #line======================Views x 9=====================================6 x pages=========# 
-#160 home()---------------- Form to select recipes to view by category------>home
-#200 get_recipes()--------- Get recipes for chosen category----------------->recipes
-#231 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
-#151 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
-#245 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
-#185 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
-#285 update_recipe() ------ Update recipe in db collection------------------>home
-#174 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
-#132 visual() ------------- View charts of cookbook db --------------------->visual
+#172 home()---------------- Form to select recipes to view by category------>home
+#208 get_recipes()--------- Get recipes for chosen category----------------->recipes
+#237 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
+#164 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
+#251 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
+#197 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
+#292 update_recipe() ------ Update recipe in db collection------------------>home
+#186 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
+#145 visual() ------------- View charts of cookbook db --------------------->visual
 
 
 @app.route('/visual')
@@ -145,8 +154,7 @@ def visual():
             name = recipe['recipe_name']
             vegan = recipe['vegan']
             vav.writelines( views+","+votes+","+name+","+vegan+ "\n")
- # need delay here  
-    sleep(5)
+ # need delay here ? sleep(5)
     return render_template('visual.html')
 
 @app.route('/add_recipe')
@@ -246,16 +254,14 @@ def insert_recipe():
     for cat in cats:
         if "ingredient" in cat:
             i = extract_num(cat, 't')
-            if form[cat] != "" and form[cat] != cat:     # blank or default
-                ingredients[i] = form[cat]
+            ingredients[i] = form[cat]
             del form[cat]
         if "instruction" in cat:
             i = extract_num(cat, 'n')
-            if form[cat] != "" and form[cat] != cat:
-                instructions[i] = form[cat]
+            instructions[i] = form[cat]
             del form[cat]    
-    form['ingredients'] = ingredients
-    form['instructions'] = instructions
+    form['ingredients'] = remove_blanks(ingredients)
+    form['instructions'] = remove_blanks(instructions)
     form['views'] = "0"
     form['votes'] = "0"
     form['vegan'] = meal_type(form)
@@ -289,16 +295,18 @@ def update_recipe():
     for cat in cats:
         if "ingredient" in cat:
             i = extract_num(cat, 't')
-            if form[cat] != "" and form[cat] != cat:
-                ingredients[i] = form[cat].strip()
+            ingredients[i] = form[cat].strip()
             del form[cat]
         if "instruction" in cat:
             i = extract_num(cat, 'n')
-            if form[cat] != "" and form[cat] != cat:
-                instructions[i] = form[cat].strip()
-            del form[cat]    
-    form['ingredients'] = ingredients
-    form['instructions'] = instructions
+            instructions[i] = form[cat].strip()
+            del form[cat] 
+    
+    form['ingredients'] = remove_blanks(ingredients)
+    if len(form['ingredients']) < 2:
+        # error mesage
+        return redirect(url_for("home")) 
+    form['instructions'] = remove_blanks(instructions)
     #del form['action']
     #insert in recipes
     show = ('recipe_name', form['recipe_name'])

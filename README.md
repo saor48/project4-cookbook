@@ -1,5 +1,6 @@
 no dinner = showrecipe fail
 add required to instructions?
+use id for edit and vote not nme.
 
 
 [ ..not yet ..]
@@ -87,8 +88,16 @@ For any scenarios that have not been automated, test the user stories manually a
     
 2. New Recipe:
     1. Empty form submit has no effect
-    2. cuisine not selected key error.
-    3. Submit form with blank author/cuisine/country
+    2. Submit form with blank cuisine field results in cuisine='not stated' value.
+    3. Submit form with blank author/cuisine/country gives html5 message 'Please fill out this field'.
+    4. Submit form with blank ingredient1/ingredient2 field gives same html5 message
+    5. Submit form with blank instructions is allowed 
+    6. Submit form with empty ingredient/instructions field results in correct saving of details without empty fields.
+    7. 
+
+3. Edit Recipe:
+    1. 
+    2. 
 =================
 
 In addition, you should mention in this section how your project looks and works on different browsers and screen sizes.
