@@ -3,7 +3,7 @@
 {{cats}}
 <h3>What's for Dinner!</h3>
 <div class="row">
-   <form class="col s12" action="{{url_for('get_recipes')}}" method="POST">
+   <form id="form" class="col s12" action="{{url_for('get_recipes')}}" method="POST">
       <div class="row">
          <ul class="collapsible" data-collapsible="accordion">
           <li>
@@ -11,7 +11,7 @@
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="recipe_name">
+                  <select id="recipe" name="recipe_name">
                   <option value="recipe" disabled selected>Choose a Recipe</option>
                   {% for name in recipes %}
                   <option value="{{name}}">{{name}}</option>
@@ -25,7 +25,7 @@
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="cuisine">
+                  <select id="cuisine" name="cuisine">
                   <option value="cuisine" disabled selected>Choose a Cuisine</option>
                   {% for cat in cats %}
                   {% for cuisine in cat.cuisine %}
@@ -41,7 +41,7 @@
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="author">
+                  <select id="author" name="author">
                   <option value="author" disabled selected>Choose an Author</option>
                   {% for cat in cats %}
                   {% for author in cat.author %}
@@ -57,7 +57,7 @@
             <div class="collapsible-body">
                <span>
                   <i class="material-icons prefix">assignment</i>
-                  <select id="category" name="country">
+                  <select id="country" name="country">
                   <option value="country" disabled selected>Choose a Country</option>
                   {% for cat in cats %}
                   {% for country in cat.country %}
@@ -68,13 +68,39 @@
                </span>
             </div>
            </li>
-      </ul>    
+      </ul> 
+      <!--
       <div class="row">
-         <button class="btn waves-effect waves-light" type="submit" >Show my recipes
+         <button class="btn waves-effect waves-light" type="submit" id="send">Show my recipes
              <i class="material-icons right">send</i>
          </button>
       </div>
+      -->
    </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+var submitted = false;
+
+var check = setInterval(checkForm, 500);
+   
+function checkForm() {
+   // check for option selected every x msec. Submit form if any option selected.
+   var r=document.getElementById("recipe").selectedIndex;
+   var c=document.getElementById("cuisine").selectedIndex;
+   var a=document.getElementById("author").selectedIndex;
+   var cy=document.getElementById("country").selectedIndex;
+   var selected = r+c+a+cy;
+   if ( submitted ) {
+         clearInterval(check);
+   } else {   
+      if ( selected > 0 ) {
+         submitted = true;
+         document.getElementById("form").submit();
+      }
+   }
+}
+
+</script>
 
 {% endblock %}

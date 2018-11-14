@@ -1,8 +1,7 @@
-error when searching by recipe -KeyError: 'views'-recipe['views'] = str(int(recipe['views']) + 1)
-                                              cuisine- if show[1] == recipe['cuisine']:
-            == no default values
-                                              
-                                              
+no dinner = showrecipe fail
+add required to instructions?
+
+
 [ ..not yet ..]
 # Cookbook  
 An online cookbook where users can post and vote on recipes.
@@ -13,48 +12,60 @@ Users can also edit their own recipes using their [password].
 ## UX
 This App provides users with an easily searchable database of recipes. 
 The App allows also users to provide and edit a recipe.
-As a recipe contains a lot of data, I want to make the input form easy to use.
+As a recipe contains a lot of data, I tried to make the input form easy to use.
 The input is broken into three sections; recipe details, ingredients and preparation.
 The form is accordion style to be easy to use and less daunting.
 A button provides additional input fields as required.
+Searching also uses the same accordion style.
 
 ## Features
 
-# Input Form
+# Add Recipe
 - Easy to use accordion style form with button for additional input fields
 
 # Home 
-- Choose a category then sub-category to view recipe names.
+- Choose a category to view recipe names.
 
 # Recipes.html
-- Display the recipe names in the selected categories and allow user to choose one.
+- Display the recipe names in the selected category and allow user to choose one.
 
 # Showrecipe.html
 - Display the chosen recipe. Page has buttons to vote and edit.
 
-# Stats
-- Analyse the various categories with d3/dc graphs
+# Visualize
+- Provides two visualizations of the cookbook with d3 graphs
 
 ### Existing Features
 - Searchability - Homepage allows user to choose a category by which to search for recipes
 - Accordion style input form - enables user to focus on one part at a time.
 - Adaptable input form - create-more-inputs button allows user to add more input lines as needed. 
 - Vote and edit buttons - allow user to take action directly from the recipe page.
+- Automatic categorization - ingredient list is parsed and recipe type derived from lists as meat, vegan, vegatarian or fish
+- 
+
 
 ### Features Left to Implement
-- Allergens / Vegan etc info
-- user signin
-- 
+- user signin to edit recipes. Presently any user can edit any recipe.
+- search for recipes by popularity.
+- search by clicking on the graphs.
 
 ## Technologies Used
 
  all of the languages, frameworks, libraries, tools 
+- [Flask] (http://flask.pocoo.org/)
+    - microframework used for this project
+- [MongoDB] (https://www.mongodb.com/)
+    -  Project database with two collections
+        - Recipes holds the details of each recipe.
+        - Categories holds the values for each category.
 - [Python 3] ( https://www.python.org/ )
     - This project is python driven.
 - [Materialize 0.100.2] ( https://materializecss.com/ )
-   - The styling framework
+   - The styling library
 - [JQuery](https://jquery.com)
-    - The project uses **JQuery** to simplify DOM manipulation.
+    - Generates additional recipe input lines on add and edit forms
+    - Submits valid form on Home page.
+    - used for materialize collapsible menu
 - [d3] (https://d3js.org/) . 
     - Used to draw the graphs on the visualize page
 - [queue] (https://cdnjs.com/libraries/queue-async). 
@@ -70,11 +81,15 @@ Whenever it is feasible, prefer to automate your tests, and if you've done so, p
 
 For any scenarios that have not been automated, test the user stories manually and provide as much detail as is relevant. A particularly useful form for describing your testing process is via scenarios, such as:
 
-1. Contact form:
-    1. Go to the "Contact Us" page
-    2. Try to submit the empty form and verify that an error message about the required fields appears
-    3. Try to submit the form with an invalid email address and verify that a relevant error message appears
-    4. Try to submit the form with all inputs valid and verify that a success message appears.
+
+1. Home Page:
+    1. Choosing any category item gives correct new page.
+    
+2. New Recipe:
+    1. Empty form submit has no effect
+    2. cuisine not selected key error.
+    3. Submit form with blank author/cuisine/country
+=================
 
 In addition, you should mention in this section how your project looks and works on different browsers and screen sizes.
 

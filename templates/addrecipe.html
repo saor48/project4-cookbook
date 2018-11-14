@@ -19,9 +19,9 @@
                   {% endfor %}
                   </select>
                   
-                  <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate">
-                  <input name="author" placeholder="Author" type="text" class="validate">
-                  <input name="country" placeholder="Country of author" type="text" class="validate">
+                  <input id="recipe_name" name="recipe_name" placeholder="Recipe name" type="text" class="validate" required>
+                  <input name="author" placeholder="Author" type="text" class="validate" required>
+                  <input name="country" placeholder="Country of author" type="text" class="validate" required>
                </span>
             </div>
            </li>
@@ -51,7 +51,7 @@
                <span>
                   <div class="row">
                      <div class="input-field col s12 instruction">
-                        <i class="material-icons prefix">subject</i>
+                        <i class="material-icons prefix">gradient</i>
          
                      </div>
                      <button class="btn waves-effect waves-light" type="button" onclick="createInputs(1, 'instruction')">
@@ -72,13 +72,14 @@
 <script>
         function createInputs(number, clas){
             if (clas == "ingredient") {
-                for (i=1;i<=number;i++){
-                    num = i + ing;
+                for (var i=1;i<=number;i++){
+                    var num = i + ing;
                     var input = document.createElement("input");
                     input.type = "text";
                     input.name = clas + num;
                     input.placeholder = clas + num;
                     input.class = "validate";
+                    if ( i<3 ) { input.required = true };
                     $('.' + clas).append(input);
                 }
                 ing = ing + number;
@@ -88,6 +89,7 @@
                     var el = document.createElement("textarea");
                     el.name = clas + ins;
                     el.class = "materialize-textarea";
+                   
                     $('.' + clas).append(el);
             }
         }

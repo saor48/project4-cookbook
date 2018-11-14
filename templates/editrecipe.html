@@ -2,12 +2,9 @@
 {% block content %}
 
 <h3>Edit Recipe </h3>
-<div id="steps-ing" class="hide">
-  {{steps[0]}}
-</div>
-<div id="steps-ins" class="hide">
-  {{steps[1]}}
-</div>
+<div id="steps-ing" class="hide"> {{steps[0]}} </div>
+<div id="steps-ins" class="hide"> {{steps[1]}} </div>
+
 <div class="row">
   <form class="col s12" action="{{url_for('update_recipe')}}" method="POST">
     <input value="{{recipe.recipe_name}}" name="recipe_name" type="hidden" class="validate">
@@ -64,21 +61,21 @@
         function createInputs(number, clas){
             if (clas == "ingredient") {
               var numsteps = parseInt(jQuery("#steps-ing").text());
-              for (i=1;i<=number;i++){
-                    num = i + ing + numsteps;
+              for (var i=1;i<=number;i++){
+                    var num = i + ing + numsteps;
                     var input = document.createElement("input");
                     input.type = "text";
                     input.name = clas + num;
                     input.placeholder = clas + num;
                     input.class = "validate";
-                    $('.' + clas).append(input);
+                    jQuery('.' + clas).append(input);
               }
               ing = ing + number;
             }
             if (clas == "instruction") {
-              var numsteps = parseInt(jQuery("#steps-ins").text());
+                  numsteps = parseInt(jQuery("#steps-ins").text());
                   num = numsteps + 1 + ins;
-                  elx = document.createElement("textarea");
+                  var elx = document.createElement("textarea");
                   elx.name = clas + num;
                   elx.class = "materialize-textarea";
                   $('.' + clas).append(elx);

@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from time import sleep
 import csv, json
 
 app = Flask(__name__)
@@ -118,15 +119,15 @@ def view_count(recipe):
             recipes.update( {'recipe_name' : recipe['recipe_name'] }, recipe)
    
 #line======================Views x 9=====================================6 x pages=========# 
-#155 home()---------------- Form to select recipes to view by category------>home
-#190 get_recipes()--------- Get recipes for chosen category----------------->recipes
-#221 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
-#142 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
-#235 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
-#175 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
-#275 update_recipe() ------ Update recipe in db collection------------------>home
-#164 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
-#129 visual() ------------- View charts of cookbook db --------------------->visual
+#160 home()---------------- Form to select recipes to view by category------>home
+#200 get_recipes()--------- Get recipes for chosen category----------------->recipes
+#231 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
+#151 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
+#245 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
+#185 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
+#285 update_recipe() ------ Update recipe in db collection------------------>home
+#174 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
+#132 visual() ------------- View charts of cookbook db --------------------->visual
 
 
 @app.route('/visual')
@@ -144,7 +145,8 @@ def visual():
             name = recipe['recipe_name']
             vegan = recipe['vegan']
             vav.writelines( views+","+votes+","+name+","+vegan+ "\n")
-                
+ # need delay here  
+    sleep(5)
     return render_template('visual.html')
 
 @app.route('/add_recipe')
@@ -198,27 +200,25 @@ def get_recipes():
     form = request.form.to_dict()
     # change from flat to nested json
     cats= [category for category in form]
-    print("gr-cats", cats)
-    for cat in cats:
-        print("gr-cat", cat)
-        if 'recipe_name' in cat:
-            show = ('recipe_name', form['recipe_name'])
-            recipe=extract_recipe(show)
-            steps=num_steps(recipe)
-            view_count(recipe)                                                  #####redirect?
-            return render_template('showrecipe.html', recipe=recipe, steps=steps)####this
-        elif 'cuisine' in cat:
-            show = ('cuisine', form['cuisine'])
-            byCategory=extract_category(show)
-        elif 'author' in cat:
-            show = ('author', form['author'])
-            byCategory=extract_category(show)
-        elif 'country' in cat:
-            show = ('country', form['country'])
-            byCategory=extract_category(show)
-        else:
-            show = 'blnk'
-    print("gr-show", show)
+    if cats:
+        for cat in cats:
+            if 'recipe_name' in cat:
+                show = ('recipe_name', form['recipe_name'])
+                recipe=extract_recipe(show)
+                steps=num_steps(recipe)
+                view_count(recipe)                                                  #####redirect?
+                return render_template('showrecipe.html', recipe=recipe, steps=steps)####this
+            elif 'cuisine' in cat:
+                show = ('cuisine', form['cuisine'])
+                byCategory=extract_category(show)
+            elif 'author' in cat:
+                show = ('author', form['author'])
+                byCategory=extract_category(show)
+            elif 'country' in cat:
+                show = ('country', form['country'])
+                byCategory=extract_category(show)
+    else:
+        return redirect(url_for("home"))
    
     return render_template('recipes.html', recipe_names=byCategory)
 
@@ -259,8 +259,10 @@ def insert_recipe():
     form['views'] = "0"
     form['votes'] = "0"
     form['vegan'] = meal_type(form)
+    if form.get('cuisine') == None :
+        form['cuisine'] = "not stated"
     #del form['action']
-    #print(form)
+    #print("add----; ",form)
     #insert in recipes
     recipes = mongo.db.recipes
     recipes.insert_one(form)
