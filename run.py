@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-#from time import sleep
+from time import sleep
 import csv, json
 
 app = Flask(__name__)
@@ -288,6 +288,7 @@ def insert_recipe():
 @app.route('/update_recipe', methods=['POST'])
 def update_recipe():
     form = request.form.to_dict()
+    print("ur--", form)
     # change from flat to nested json
     cats= [category for category in form]
     ingredients = {}
@@ -305,7 +306,8 @@ def update_recipe():
     form['ingredients'] = remove_blanks(ingredients)
     if len(form['ingredients']) < 2:
         # error mesage
-        return redirect(url_for("home")) 
+        error_message = "--> Insufficient Ingredients - Edit Denied  <--"
+        return render_template('errors.html', error=error_message ) 
     form['instructions'] = remove_blanks(instructions)
     #del form['action']
     #insert in recipes

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Error Page </h3>
+<hr>
+<div id ="error"> <h4> {{ error }} </h4></div>
+<hr>
+<div class="row error">
+   <h5> Errors can occur if you do not put sufficient inputs.</h5>
+   <p> You must enter: </p>
+   <p> At least 2 lines for ingredients.</p>
+   <p> One line for instructions.</p>
+   <p> All of the lines for Author, Recipe name and Country.</p>
+   
+</div>    
+<hr>
+{% endblock%}

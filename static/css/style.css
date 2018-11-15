@@ -63,7 +63,10 @@ nav .logo1 {
     color: gray;
     font-size: larger;
     left: 100px;
-}  
+}
+.error {
+    margin-left: 100px;
+}
 @media only screen and (min-width: 601px) {
   nav .button-collapse {
     display: none;

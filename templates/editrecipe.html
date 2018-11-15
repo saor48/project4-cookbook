@@ -4,6 +4,7 @@
 <h3>Edit Recipe </h3>
 <div id="steps-ing" class="hide"> {{steps[0]}} </div>
 <div id="steps-ins" class="hide"> {{steps[1]}} </div>
+<div id ="error"> <h4> {{ error }} </h4></div>
 
 <div class="row">
   <form class="col s12" action="{{url_for('update_recipe')}}" method="POST">
@@ -58,6 +59,8 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+
+
         function createInputs(number, clas){
             if (clas == "ingredient") {
               var numsteps = parseInt(jQuery("#steps-ing").text());
