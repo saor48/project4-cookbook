@@ -12,12 +12,13 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 
 mongo = PyMongo(app)
 
-#line=================Functions x 9=============================================#
+#line=================Functions x 10=============================================#
 #26 meal_type(recipe) --------------- check ingredients for meat and dairy
 #47 extract_num(name, letter)  ------ get the number from eg ingredient5
-#54 category_check(category, item) -- is item already in db-categories?
+#58 category_check(category, item) -- add item to list if not in db-categories?
+#67 category_remove_author(author) -- remove author from list 
 #64 extract_recipe(show) ------------ get the full recipe from db
-#76 extract_category(show)----------- get all recipe names for specified category
+#86 extract_category(show)----------- get all recipe names for specified category
 #93 num_steps(recipe) --------------- find number of fields for ingredients/instructions
 #    ..  return (ingreds, prep, steps)          and return fields as lists
 #112 view_count(recipe) -------------- increment views field
@@ -59,16 +60,24 @@ def category_check(category, item):
     cats= [cat for cat in categories]
     for cat in cats:
         items = cat[category]
-        if item not in items:
+        if item not in items and item != '':
             items.append(item)
             print("ck=3i=", items)
     return items
+    
+def category_remove_author(author):
+    categories = mongo.db.categories.find()
+    cats= [cat for cat in categories]
+    for cat in cats:
+        cat['author'].remove(author)
+        print("cra=author=", cat['author'])
+    return cat['author']
     
 def extract_recipe(show):
     recipe_name = show[1]
     recipes=mongo.db.recipes.find()
     cats= [category for category in recipes]
-    showrecipe = ['no dinner']
+    showrecipe = []
     for recipe in cats:
         if recipe_name == recipe['recipe_name']:
             showrecipe = recipe
@@ -78,7 +87,6 @@ def extract_recipe(show):
 def extract_category(show):
     recipes=mongo.db.recipes.find()
     cats= [category for category in recipes]
-    print("exc==show,cats",show, cats)
     showrecipes = []
     for recipe in cats:
         if show[0] == 'cuisine':
@@ -87,6 +95,7 @@ def extract_category(show):
         elif show[0] == 'author':
             if show[1] == recipe['author']:
                 showrecipes.append(recipe['recipe_name'])
+                print("exc==show",show)
         elif show[0] == 'country':
             if show[1] == recipe['country']:
                 showrecipes.append(recipe['recipe_name'])
@@ -347,20 +356,34 @@ def delete_recipe():
     form = request.form.to_dict()
     name=""
     oid=""
-    # showrecipe form = "name", "id"
-    # delete form = "name", "same_name", oid", "delete"
+    # showrecipe form = "name", "id", "author"
+    # delete form = "name", "same_name", oid", "delete", "author"
     if 'delete' not in form:
             name = form["name"]
             oid = form["id"]
+            author = form["author"]
     if 'delete' in form:
         if form['name'].lower() == form['same_name'].lower():
-            deleted = mongo.db.recipes.delete_one({'_id':ObjectId(form['oid'])}) 
+            show = ('author', form['author'])
+            same_author_recipes = extract_category(show)
+            if len(same_author_recipes) == 1:
+                authors = category_remove_author(form['author'])
+                 #update categories
+                cuisines = category_check('cuisine', '')
+                countries = category_check('country', '')
+                mongo.db.categories.update( {},
+                    {  'cuisine' : cuisines,
+                       'author' : authors,
+                       'country' : countries
+                    } 
+                )
+            deleted = mongo.db.recipes.delete_one({'_id':ObjectId(form['oid'])})
             return redirect(url_for("home"))
         else:
             error_message = "--> Names do not match. Deletion denied <--"
             return render_template('errors.html', error=error_message )
    
-    return render_template('delete.html', delete_name=name, oid=oid)
+    return render_template('delete.html', delete_name=name, oid=oid, author=author)
     
     
 if __name__ == '__main__':

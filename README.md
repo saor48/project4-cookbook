@@ -1,11 +1,10 @@
-remove author from categories if deleted
+
 clean visual.js
 
-[ ..not yet ..]
 # Cookbook  
 An online cookbook where users can post their recipes and vote on other recipes.
 
-Recipes are searchable for parameters of country, cuisine, [most popular] and author.
+Recipes are searchable for parameters of country, cuisine and author.
 
 ## UX
 The App uses Materialize collapsible menus for a simple and clear interface that works well on mobiles.
@@ -92,6 +91,12 @@ A button provides additional input fields as required.
     1. Submit form without 2 non-blank ingredient lines redirects to error page
     2. Submit form with empty ingredient/instructions field results in correct saving of details without empty fields.
     3. Submit form with blank instructions redirects to error page
+
+4. Delete Recipe:
+    1. Submit form with correct spelling of recipe name deletes recipe from recipes collection in db.
+    2. This submit also deletes author from categories if author has only this recipe.
+    3. Submit form without correct spelling of recipe name redirects to error page 
+
 
 ### Devices
     - Tested on google inspect for different screen sizes. No issues found.

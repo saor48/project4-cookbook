@@ -22,6 +22,7 @@
          <form  action="{{url_for('delete_recipe')}}" method="POST">
          <input value="{{recipe['recipe_name']}}" name="name"  type="hidden">
          <input value="{{recipe['_id']}}" name="id"  type="hidden">
+         <input value="{{recipe['author']}}" name="author"  type="hidden">
          <button class="button btn-delete" type="submit">Delete</button>
          </form>
       </div>

@@ -10,6 +10,7 @@
 
     <form class="col s12" action="{{url_for('delete_recipe')}}" method="POST">
         <input value="{{oid}}" name="oid" type="hidden" class="validate">
+        <input value="{{author}}" name="author" type="hidden" class="validate">
         <input value="{{delete_name}}" name="name" type="hidden" class="validate">
         <input name="same_name" type="text" class="validate">
     <div class="row">
