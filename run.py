@@ -1,4 +1,3 @@
-# nodinner select error
 import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_pymongo import PyMongo
@@ -13,17 +12,17 @@ app.config['MONGO_URI'] = 'mongodb://root:root2pass@ds111623.mlab.com:11623/cook
 mongo = PyMongo(app)
 
 #line=================Functions x 10=============================================#
-#26 meal_type(recipe) --------------- check ingredients for meat and dairy
-#47 extract_num(name, letter)  ------ get the number from eg ingredient5
-#58 category_check(category, item) -- add item to list if not in db-categories?
-#67 category_remove_author(author) -- remove author from list 
-#64 extract_recipe(show) ------------ get the full recipe from db
-#86 extract_category(show)----------- get all recipe names for specified category
-#93 num_steps(recipe) --------------- find number of fields for ingredients/instructions
+#27 meal_type(recipe) --------------- check ingredients for meat and dairy
+#49 extract_num(name, letter)  ------ get the number from eg ingredient5
+#56 category_check(category, item) -- add item to list if not in db-categories?
+#65 category_remove_author(author) -- remove author from list 
+#72 extract_recipe(show) ------------ get the full recipe from db
+#83 extract_category(show)----------- get all recipe names for specified category
+#99 num_steps(recipe) --------------- find number of fields for ingredients/instructions
 #    ..  return (ingreds, prep, steps)          and return fields as lists
-#112 view_count(recipe) -------------- increment views field
-#122 remove_blanks(adict) ------------ remove blank fields from input forms
-#129 name_check(item): --------------- Add X to recipe name if already in db
+#118 view_count(recipe) -------------- increment views field
+#123 remove_blanks(adict) ------------ remove blank fields from input forms
+#134 name_check(item): --------------- Add X to recipe name if already in db
 
 def meal_type(recipe):
     # these lists are not complete
@@ -45,7 +44,6 @@ def meal_type(recipe):
         for item in ingreds:
             if f in ingreds[item]:
                 meal = 'fish'
-    
     return meal
 
 def extract_num(name, letter):
@@ -62,7 +60,6 @@ def category_check(category, item):
         items = cat[category]
         if item not in items and item != '':
             items.append(item)
-            print("ck=3i=", items)
     return items
     
 def category_remove_author(author):
@@ -70,7 +67,6 @@ def category_remove_author(author):
     cats= [cat for cat in categories]
     for cat in cats:
         cat['author'].remove(author)
-        print("cra=author=", cat['author'])
     return cat['author']
     
 def extract_recipe(show):
@@ -95,7 +91,6 @@ def extract_category(show):
         elif show[0] == 'author':
             if show[1] == recipe['author']:
                 showrecipes.append(recipe['recipe_name'])
-                print("exc==show",show)
         elif show[0] == 'country':
             if show[1] == recipe['country']:
                 showrecipes.append(recipe['recipe_name'])
@@ -143,25 +138,23 @@ def name_check(item):
         name = cat['recipe_name']
         if name.lower() == item.lower():
             item += "X"
-            print("ck=X=", item)
     return item    
 #line======================Views x 10=====================================8 x pages=========# 
-#172 home()---------------- Form to select recipes to view by category------>home
-#208 get_recipes()--------- Get recipes for chosen category----------------->recipes
-#237 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
-#164 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
-#251 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
-#197 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
-#292 update_recipe() ------ Update recipe in db collection------------------>home
-#186 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
-#145 visual() ------------- View charts of cookbook db --------------------->visual
-#328 delete_recipe() ------ Delete recipe from db -------------------------->delete/home/errors
+#182 home()---------------- Form to select recipes to view by category------>home
+#215 get_recipes()--------- Get recipes for chosen category----------------->recipes
+#243 show_recipe()--------- Get chosen recipe ---------------------------...>showrecipe
+#172 add_recipe() --------- Form to submit new recipe----------------------->addrecipe
+#258 insert_recipe()------- Put new recipe in db collections---------------->addrecipe
+#205 edit_recipe() -- ----- Form to edit selected recipe ------------------->editrecipe
+#303 update_recipe() ------ Update recipe in db collection------------------>home
+#194 vote()---------------- Add 1 vote to chosen recipe   ------------------>home
+#155 visual() ------------- View charts of cookbook db --------------------->visual
+#340 delete_recipe() ------ Delete recipe from db -------------------------->delete/home/errors
 
 @app.route('/visual')
 def visual():
     pointer=mongo.db.recipes.find()
     recipes = [category for category in pointer]
-   
     with open("static/data/vav.csv", "w") as vav:
         heading = "views"+","+"votes"+","+"name"+","+"vegan"
         vav.writelines(heading+ "\n")
@@ -172,7 +165,7 @@ def visual():
             name = recipe['recipe_name']
             vegan = recipe['vegan']
             vav.writelines( views+","+votes+","+name+","+vegan+ "\n")
- # need delay here ? sleep(5)
+    # need delay here ? sleep(5)
     return render_template('visual.html')
 
 @app.route('/add_recipe')
@@ -248,7 +241,6 @@ def get_recipes():
 
 @app.route('/show_recipe', methods=['POST'])
 def show_recipe():
-    print("sr==", request.form)
     form = request.form.to_dict()
     cats= [category for category in form]
     steps = ()
@@ -310,7 +302,6 @@ def insert_recipe():
 @app.route('/update_recipe', methods=['POST'])
 def update_recipe():
     form = request.form.to_dict()
-    print("ur--", form)
     # change from flat to nested json
     cats= [category for category in form]
     ingredients = {}
@@ -324,7 +315,6 @@ def update_recipe():
             i = extract_num(cat, 'n')
             instructions[i] = form[cat].strip()
             del form[cat] 
-    
     form['ingredients'] = remove_blanks(ingredients)
     form['instructions'] = remove_blanks(instructions)
     if len(form['ingredients']) < 2:
@@ -333,8 +323,6 @@ def update_recipe():
     if len(form['instructions']) < 1:
         error_message = "--> Insufficient Instructions - Edit Denied  <--"
         return render_template('errors.html', error=error_message )
-    
-    #del form['action']
     #insert in recipes
     show = ('recipe_name', form['recipe_name'])
     recipe = extract_recipe(show)
@@ -344,15 +332,12 @@ def update_recipe():
     form['votes'] = recipe['votes']
     form['views'] = recipe['views']
     form['vegan'] = meal_type(form)
-    print("update--form", form)
     recipes = mongo.db.recipes
     recipes.update( {'recipe_name' : form['recipe_name']}, form)
-   
     return redirect(url_for("home")) 
 
 @app.route('/delete_recipe', methods=['POST'])    
 def delete_recipe():
-    print("rf--", request.form)
     form = request.form.to_dict()
     name=""
     oid=""
@@ -382,7 +367,6 @@ def delete_recipe():
         else:
             error_message = "--> Names do not match. Deletion denied <--"
             return render_template('errors.html', error=error_message )
-   
     return render_template('delete.html', delete_name=name, oid=oid, author=author)
     
     

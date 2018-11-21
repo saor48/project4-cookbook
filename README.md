@@ -1,16 +1,12 @@
-
-clean visual.js
-
 # Cookbook  
 An online cookbook where users can post their recipes and vote on other recipes.
-
 Recipes are searchable for parameters of country, cuisine and author.
+This App provides users with an easily searchable database of recipes. 
+Users may provide and edit recipes.
 
 ## UX
 The App uses Materialize collapsible menus for a simple and clear interface that works well on mobiles.
 The color scheme is warm muted colors that are associated with food.
-This App provides users with an easily searchable database of recipes. 
-Users may provide and edit recipes.
 As a recipe contains a lot of data, I tried to make the input form easy to use.
 The input is broken into three sections; recipe details, ingredients and preparation.
 The form is accordion style to be easy to use and less daunting.
@@ -28,7 +24,10 @@ A button provides additional input fields as required.
 - Display the recipe names in the selected category and allow user to choose one.
 
 # Showrecipe.html
-- Display the chosen recipe. Page has buttons to vote and edit.
+- Display the chosen recipe. Page has buttons to vote, edit and delete.
+
+# Delete.html
+- To prevent accidental deletion user must type in the name of the recipe.
 
 # Visualize
 - Provides two visualizations of the cookbook with d3 graphs
@@ -44,7 +43,6 @@ A button provides additional input fields as required.
 
 ### Features Left to Implement
 - user signin to edit recipes. Presently any user can edit any recipe.
-- search for recipes by popularity.
 - search by clicking on the graphs.
 
 ## Technologies Used
@@ -83,7 +81,7 @@ A button provides additional input fields as required.
     2. Submit form with blank cuisine field results in cuisine='not stated' value.
     3. Submit form with blank author/cuisine/country gives html5 message 'Please fill out this field'.
     4. Submit form with blank ingredient1/ingredient2 field gives same html5 message
-    5. Submit form with blank instructions is allowed - this should be changed
+    5. Submit form with blank instructions redirects to error page
     6. Submit form with empty ingredient/instructions field results in correct saving of details without empty fields.
     7. Submit form with 'recipename' already in db adds X to name i.e 'recipenameX'   
 

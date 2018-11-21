@@ -33,26 +33,22 @@ h4{
 .button {
     border: none;
     color: white;
-    padding: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     margin: 20px;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 50%;
 }
-.button1 {border-radius: 50%;
+.btn-vote, .button1 {
     background-color: #4CAF50; /* Green */
-    font-size: 16px;
-    padding: 8px;
 }
-.btn-edit {border-radius: 50%;
+.btn-edit {
     background-color: blue; /*  */
-    font-size: 16px;
-    padding: 8px;
 }
-.btn-delete {border-radius: 50%;
+.btn-delete {
     background-color: red; /*  */
-    font-size: 16px;
-    padding: 8px;
 }
 
 nav .logo {

@@ -3,8 +3,7 @@ queue()
     .await(makeGraphs);
 
 function makeGraphs(error, vavData) {
-// buttons for view/votes
-// 
+
     var views5 = vavData
             .map(function(d,i) {  return d; })                  //clone
             .sort(function(a,b) { return b.views - a.views;})
@@ -13,9 +12,7 @@ function makeGraphs(error, vavData) {
             .map(function(d,i) {  return d; })                  //clone
             .sort(function(a,b) { return b.votes - a.votes;})
             .slice(0,5);
-            
-    console.log("vote5", votes5)
-    console.log("view5", views5)
+
     drawbar(views5);
     
     var arcData = d3.nest()
@@ -37,8 +34,7 @@ function drawbar(data){
         votes.push(data[i]['votes']);
         names.push(data[i]['name']);
     }
-    console.log("views-",views);
-    console.log("data-",data);
+    
     var highest = Math.max.apply(this,views);
     
     var w = 600, wname = 300, h = 200;
@@ -60,7 +56,7 @@ function drawbar(data){
     
     // enter data
     var bar1 =  svgbar.selectAll("rect")
-        .data(rviews)                       // wont accept data - error is no length
+        .data(rviews)                       
         .enter()
         //.append("g")
         ;
