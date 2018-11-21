@@ -41,7 +41,7 @@ function drawbar(data){
     console.log("data-",data);
     var highest = Math.max.apply(this,views);
     
-    var w = 600, wname = 200, h = 200;
+    var w = 600, wname = 300, h = 200;
     var barPadding = 1;
     var setLength = views.length;
     var rowHeight = 30;
@@ -113,7 +113,7 @@ function drawbar(data){
         .attr("y", function(d, i) {
             return i * rowHeight + (rowHeight) / 2;
         })
-        .attr("x",  w - 180)
+        .attr("x",  w - wname + 20)
         .attr("font-family", "sans-serif")
         .attr("font-size", "13px")
         .attr("fill", "white");

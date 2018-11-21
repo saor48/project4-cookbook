@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Delete Recipe </h3>
+
+<div class="row">
+    <h4>{{delete_name}}</h4>
+
+    <p>To delete this recipe, please enter the recipe name below</p>
+
+    <form class="col s12" action="{{url_for('delete_recipe')}}" method="POST">
+        <input value="{{oid}}" name="oid" type="hidden" class="validate">
+        <input value="{{delete_name}}" name="name" type="hidden" class="validate">
+        <input name="same_name" type="text" class="validate">
+    <div class="row">
+      <button name="delete" class="btn waves-effect waves-light" type="submit" >Delete this Recipe
+           <i class="material-icons right">send</i>
+      </button>
+    </div>
+    </form>
+    
+</div>
+{% endblock %}

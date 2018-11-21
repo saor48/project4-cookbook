@@ -1,23 +1,21 @@
-no dinner = showrecipe fail
-add required to instructions?
-use id for edit and vote not nme.
-
+remove author from categories if deleted
+clean visual.js
 
 [ ..not yet ..]
 # Cookbook  
-An online cookbook where users can post and vote on recipes.
+An online cookbook where users can post their recipes and vote on other recipes.
 
 Recipes are searchable for parameters of country, cuisine, [most popular] and author.
-Users can also edit their own recipes using their [password].
 
 ## UX
+The App uses Materialize collapsible menus for a simple and clear interface that works well on mobiles.
+The color scheme is warm muted colors that are associated with food.
 This App provides users with an easily searchable database of recipes. 
-The App allows also users to provide and edit a recipe.
+Users may provide and edit recipes.
 As a recipe contains a lot of data, I tried to make the input form easy to use.
 The input is broken into three sections; recipe details, ingredients and preparation.
 The form is accordion style to be easy to use and less daunting.
 A button provides additional input fields as required.
-Searching also uses the same accordion style.
 
 ## Features
 
@@ -41,7 +39,7 @@ Searching also uses the same accordion style.
 - Accordion style input form - enables user to focus on one part at a time.
 - Adaptable input form - create-more-inputs button allows user to add more input lines as needed. 
 - Vote and edit buttons - allow user to take action directly from the recipe page.
-- Automatic categorization - ingredient list is parsed and recipe type derived from lists as meat, vegan, vegatarian or fish
+- Automatic categorization - ingredient list is parsed and recipe type derived from lists(*incomplete) as meat, vegan, vegatarian or fish.
 - 
 
 
@@ -76,12 +74,7 @@ Searching also uses the same accordion style.
 
 ## Testing
 
-In this section, you need to convince the assessor that you have conducted enough testing to legitimately believe that the site works well. Essentially, in this part you will want to go over all of your user stories from the UX section and ensure that they all work as intended, with the project providing an easy and straightforward way for the users to achieve their goals.
-
-Whenever it is feasible, prefer to automate your tests, and if you've done so, provide a brief explanation of your approach, link to the test file(s) and explain how to run them.
-
-For any scenarios that have not been automated, test the user stories manually and provide as much detail as is relevant. A particularly useful form for describing your testing process is via scenarios, such as:
-
+### Tests
 
 1. Home Page:
     1. Choosing any category item gives correct new page.
@@ -93,32 +86,26 @@ For any scenarios that have not been automated, test the user stories manually a
     4. Submit form with blank ingredient1/ingredient2 field gives same html5 message
     5. Submit form with blank instructions is allowed - this should be changed
     6. Submit form with empty ingredient/instructions field results in correct saving of details without empty fields.
-    7. 
+    7. Submit form with 'recipename' already in db adds X to name i.e 'recipenameX'   
 
 3. Edit Recipe:
     1. Submit form without 2 non-blank ingredient lines redirects to error page
     2. Submit form with empty ingredient/instructions field results in correct saving of details without empty fields.
-    3. Submit form with blank instructions is allowed - this should be changed
+    3. Submit form with blank instructions redirects to error page
 
-=================
+### Devices
+    - Tested on google inspect for different screen sizes. No issues found.
 
-In addition, you should mention in this section how your project looks and works on different browsers and screen sizes.
+### Issues:
+1. Bugs:
+    1. Graphs on visualize page sometimes do not show updated information without a hard reset.
+        This is a problem on c9 and heroku. Putting in a 5 second sleep between 
+        updating the vav.csv file and rendering the page does not solve the issue.
 
-You should also mention in this section any interesting bugs or problems you discovered during your testing, even if you haven't addressed them yet.
+## Deployment:
 
-If this section grows too long, you may want to split it off into a separate file and link to it from here.
-
-## Deployment
-
-This section should describe the process you went through to deploy the project to a hosting platform (e.g. GitHub Pages or Heroku).
-
-In particular, you should provide all details of the differences between the deployed version and the development version, if any, including:
-- Different values for environment variables (Heroku Config Vars)?
-- Different configuration files?
-- Separate git branch?
-
-In addition, if it is not obvious, you should also describe how to run your code locally.
-
+1. App deployed on Heroku :https://project4-cookbook.herokuapp.com/
+2. Files created for this deployment: Procfile, requirements.txt.
 
 ## Credits
 

@@ -5,17 +5,24 @@
       <div class="col s8">
          <h3>{{recipe['recipe_name']}}</h3>
       </div>
-      <div class="col s2">
+      <div class="col s1">
          <form  action="{{url_for('vote')}}" method="POST">
          <input value="{{recipe['recipe_name']}}" name="recipe"  type="hidden">
          <input value="vote" name="vote"  type="hidden">
          <button class="button button1">Vote</button>
          </form>
       </div>
-      <div class="col s2">
+      <div class="col s1">
          <form  action="{{url_for('edit_recipe')}}" method="POST">
          <input value="{{recipe['recipe_name']}}" name="recipe"  type="hidden">
          <button class="button btn-edit" type="submit">Edit</button>
+         </form>
+      </div>
+      <div class="col s1">
+         <form  action="{{url_for('delete_recipe')}}" method="POST">
+         <input value="{{recipe['recipe_name']}}" name="name"  type="hidden">
+         <input value="{{recipe['_id']}}" name="id"  type="hidden">
+         <button class="button btn-delete" type="submit">Delete</button>
          </form>
       </div>
    </div>
