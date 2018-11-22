@@ -36,9 +36,8 @@ A button provides additional input fields as required.
 - Searchability - Homepage allows user to choose a category by which to search for recipes
 - Accordion style input form - enables user to focus on one part at a time.
 - Adaptable input form - create-more-inputs button allows user to add more input lines as needed. 
-- Vote and edit buttons - allow user to take action directly from the recipe page.
+- Vote, edit, delete buttons - allow user to take action directly from the recipe page.
 - Automatic categorization - ingredient list is parsed and recipe type derived from lists(*incomplete) as meat, vegan, vegatarian or fish.
-- 
 
 
 ### Features Left to Implement
@@ -98,12 +97,15 @@ A button provides additional input fields as required.
 
 ### Devices
     - Tested on google inspect for different screen sizes. No issues found.
+    - Tested on browsers Chrome, Edge, Opera.
 
 ### Issues:
 1. Bugs:
     1. Graphs on visualize page sometimes do not show updated information without a hard reset.
         This is a problem on c9 and heroku. Putting in a 5 second sleep between 
         updating the vav.csv file and rendering the page does not solve the issue.
+    2. On the Edge browser placeholders do nor appear in red as per css rule.
+    
 
 ## Deployment:
 
